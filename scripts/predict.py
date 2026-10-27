@@ -5,8 +5,8 @@ pick'ems, Pick'Em playoff picks) + a prediction log that measures whether the re
 actually beats the plain VRS-rank model.
 
 Two numbers per match:
-  base  = calibrated model on VRS rank only (no 'adj', no overrides)
-  skill = the same model with the research adjustments ('adj', map_prob_overrides)
+  base  = the automatic model: VRS rank + elo_adj (from scripts/elo.py), no research
+  skill = the same model plus research: manual 'adj', 'sd', map_prob_overrides
 
 Subcommands:
   python predict.py probs input.json [--log predictions.json]
@@ -18,7 +18,8 @@ Input JSON for `probs`:
 {
   "event": "IEM Example 2026",
   "stage": "Group A",
-  "teams": [{"name": "A", "rank": 4, "adj": -25, "note": "stand-in for X"}, ...],
+  "event_type": "other",                     # "major" at Majors
+  "teams": [{"name": "A", "rank": 4, "elo_adj": 12, "adj": -25, "sd": 40, "note": "stand-in for X"}, ...],
   "map_prob_overrides": {"A|B": 0.42},
   "matches": [{"id": "A-R1-1", "a": "A", "b": "B", "bo": 3, "date": "2026-11-05"}, ...]
 }
@@ -62,8 +63,9 @@ def cmd_probs(a):
     teams = cfg["teams"]
     names = {t["name"] for t in teams}
     shrink = float(cfg.get("bo1_shrink", 0.8))
-    skill = Ratings(teams, cfg.get("map_prob_overrides"), shrink, use_adj=True)
-    base = Ratings(teams, None, shrink, use_adj=False)
+    et = cfg.get("event_type", "other")
+    skill = Ratings(teams, cfg.get("map_prob_overrides"), shrink, use_adj=True, event_type=et)
+    base = Ratings(teams, None, shrink, use_adj=False, event_type=et)
     notes = {t["name"]: t.get("note", "") for t in teams if t.get("adj") or t.get("note")}
     rows = []
     ids = set()
@@ -75,20 +77,20 @@ def cmd_probs(a):
             raise SystemExit(f"Duplicate match id {m['id']}")
         ids.add(m["id"])
         bo = int(m.get("bo", 3))
-        pb = base.p_series(m["a"], m["b"], bo)
-        ps = skill.p_series(m["a"], m["b"], bo)
+        pb = base.p_series_expected(m["a"], m["b"], bo)
+        ps = skill.p_series_expected(m["a"], m["b"], bo)
         pick = m["a"] if ps >= 0.5 else m["b"]
         rows.append({"event": cfg.get("event", ""), "stage": cfg.get("stage", ""), "id": m["id"],
                      "date": m.get("date", ""), "a": m["a"], "b": m["b"], "bo": bo,
                      "p_base": round(pb, 4), "p_skill": round(ps, 4), "pick": pick,
                      "winner": None, "logged_at": dt.datetime.now().isoformat(timespec="seconds")})
     print(f"## {cfg.get('event', '')} {cfg.get('stage', '')}\n")
-    print("| Матч | Bo | Пик | Шанс (скилл) | Шанс (только ранг) | Уверенность |")
+    print("| Матч | Bo | Пик | Шанс (скилл) | Шанс (авто-модель) | Уверенность |")
     print("|---|---|---|---|---|---|")
     for r in rows:
         ps = r["p_skill"] if r["pick"] == r["a"] else 1 - r["p_skill"]
         pb = r["p_base"] if r["pick"] == r["a"] else 1 - r["p_base"]
-        flag = " ⚠ расходится с рангом" if (r["p_base"] >= 0.5) != (r["p_skill"] >= 0.5) else ""
+        flag = " ⚠ расходится с авто-моделью" if (r["p_base"] >= 0.5) != (r["p_skill"] >= 0.5) else ""
         print(f"| {r['a']} vs {r['b']} | {r['bo']} | **{r['pick']}**{flag} | {ps:.0%} | {pb:.0%} | {confidence(ps)} |")
     if notes:
         print("\nПоправки: " + "; ".join(f"{t}: {n}" for t, n in notes.items() if n))
@@ -146,7 +148,7 @@ def cmd_score(a):
     if not a.event:
         for p in rows:
             groups.setdefault(p["event"], []).append(p)
-    print("| Выборка | Матчей | Точность: ранг → скилл | Log-loss: ранг → скилл | Brier: ранг → скилл |")
+    print("| Выборка | Матчей | Точность: авто → скилл | Log-loss: авто → скилл | Brier: авто → скилл |")
     print("|---|---|---|---|---|")
     for g, rs in groups.items():
         ab, lb, bb = metrics(rs, "p_base")
@@ -155,7 +157,7 @@ def cmd_score(a):
     diff = [p for p in rows if (p["p_base"] >= 0.5) != (p["p_skill"] >= 0.5)]
     if diff:
         right = sum(p["pick"] == p["winner"] for p in diff)
-        print(f"\nМатчи, где скилл пошёл против ранга: {len(diff)}, из них скилл прав в {right}.")
+        print(f"\nМатчи, где скилл пошёл против авто-модели: {len(diff)}, из них скилл прав в {right}.")
     ab, lb, _ = metrics(rows, "p_base")
     as_, ls, _ = metrics(rows, "p_skill")
     if len(rows) < 30:

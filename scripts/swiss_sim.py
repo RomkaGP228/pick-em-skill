@@ -22,13 +22,17 @@ Input JSON:
 {
   "stage": "Stage 1",
   "format": "standard",                 # or "all_bo3" / "all_bo1"
+  "event_type": "major",                # or "other": non-Major events are a bit less predictable
+  "rating_sd": 0,                       # optional global rating uncertainty (robustness checks)
   "pairing": "valve",                   # or "high_low" for non-Major Swiss events
   "round1": "1v9",                      # or "1v16"
   "bo1_shrink": 0.8,                    # how much Bo1 pulls map odds toward 50/50
   "advance_counts_3_0": false,          # Pick'Em rule: does a 3-0 team in an advance slot count?
   "teams": [                            # in INITIAL SEED order (seed 1 first)
      {"name": "Vitality", "rank": 1},              # global VRS rank (recommended base)
-     {"name": "NAVI", "rank": 5, "adj": -20},     # adj = manual tweak with a stated reason
+     {"name": "NAVI", "rank": 5, "elo_adj": 35, "adj": -20, "sd": 40},
+                       # elo_adj from scripts/elo.py; adj = manual research tweak with a reason;
+                       # sd = extra rating uncertainty (e.g. roster change in the last ~5 matches)
      {"name": "TeamX", "vrs_points": 1650},       # alternative base
      {"name": "TeamY", "rating": 1580},           # explicit rating
      ...
@@ -102,7 +106,8 @@ class Stage:
         if self.round1 not in ("1v9", "1v16"):
             raise ValueError("round1 must be 1v9 | 1v16")
         self.bo1_shrink = float(cfg.get("bo1_shrink", BO1_SHRINK))
-        self.model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), self.bo1_shrink)
+        self.model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), self.bo1_shrink,
+                             event_type=cfg.get("event_type", "major"), rating_sd=cfg.get("rating_sd", 0))
         self.rating = self.model.r
         self.live_rounds = cfg.get("rounds") or []
         for rnd in self.live_rounds:
@@ -227,10 +232,15 @@ class Stage:
 def run_sims(stage, n, seed=None):
     rng = random.Random(seed)
     cats = np.zeros((n, 16), dtype=np.int8)
+    noisy = stage.model.noisy
     for s in range(n):
+        if noisy:
+            stage.model.redraw(rng)
         res = stage.simulate_once(rng)
         for j, t in enumerate(stage.teams):
             cats[s, j] = CAT_INDEX[res[t]]
+    if noisy:
+        stage.model.r.update(stage.model.base)
     return cats
 
 

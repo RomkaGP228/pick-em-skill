@@ -35,6 +35,8 @@ jobs:
           python scripts/bracket_sim.py --template gsl4 --teams A B C D > /tmp/gsl.json
           python scripts/playoffs_sim.py --help > /dev/null
           python scripts/predict.py --help > /dev/null
+          python scripts/elo.py --help > /dev/null
+          python scripts/backtest.py --help > /dev/null
 
       - name: Build the skill archive
         run: |

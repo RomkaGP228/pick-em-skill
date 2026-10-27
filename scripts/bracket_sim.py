@@ -17,7 +17,8 @@ Usage:
 Input JSON:
 {
   "event": "IEM Example 2026 — Playoffs",
-  "teams": [{"name": "A", "rank": 3, "adj": 10, "note": "..."}, ...],
+  "event_type": "other",                        # "major" for Major playoffs
+  "teams": [{"name": "A", "rank": 3, "elo_adj": 20, "adj": 10, "sd": 0, "note": "..."}, ...],
   "map_prob_overrides": {"A|B": 0.45},
   "matches": [
      {"id": "QF1", "a": "A", "b": "H", "bo": 3},
@@ -102,7 +103,8 @@ TEMPLATES = {"single_elim": tpl_single_elim, "gsl4": tpl_gsl4, "double_elim8": t
 class Bracket:
     def __init__(self, cfg):
         self.teams = [t["name"] for t in cfg["teams"]]
-        self.model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), float(cfg.get("bo1_shrink", 0.8)))
+        self.model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), float(cfg.get("bo1_shrink", 0.8)),
+                             event_type=cfg.get("event_type", "other"), rating_sd=cfg.get("rating_sd", 0))
         self.matches = cfg["matches"]
         self.results = cfg.get("results") or {}
         self.placements = cfg.get("placements") or {}
@@ -129,6 +131,8 @@ class Bracket:
         return side
 
     def once(self, rng):
+        if self.model.noisy:
+            self.model.redraw(rng)
         out = {}
         for m in self.matches:
             a, b = self.resolve(m["a"], out), self.resolve(m["b"], out)
@@ -157,6 +161,7 @@ def run(cfg, n, seed=None):
         for label, refs in br.placements.items():
             for ref in refs:
                 place[label][br.resolve(ref, out)] += 1
+    br.model.r.update(br.model.base)
     return br, win, play, place
 
 
@@ -183,7 +188,7 @@ def main():
         if a.template == "double_elim8" and len(a.teams) != 8:
             sys.exit("double_elim8 needs exactly 8 teams (pairs 1-2, 3-4, 5-6, 7-8 in bracket order)")
         body = TEMPLATES[a.template](a.teams, **kw)
-        cfg = {"event": "", "teams": [{"name": t, "rank": None} for t in a.teams],
+        cfg = {"event": "", "event_type": "other", "teams": [{"name": t, "rank": None} for t in a.teams],
                "map_prob_overrides": {}, **body, "results": {}}
         print(json.dumps(cfg, ensure_ascii=False, indent=2))
         return
