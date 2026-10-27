@@ -1,0 +1,78 @@
+{
+  "stage": "IEM Cologne Major 2026 — Stage 3 (пример: реальный посев, ранги VRS на 01.06.2026, без поправок)",
+  "format": "all_bo3",
+  "advance_counts_3_0": false,
+  "teams": [
+    {
+      "name": "Vitality",
+      "rank": 1
+    },
+    {
+      "name": "Natus Vincere",
+      "rank": 4
+    },
+    {
+      "name": "Falcons",
+      "rank": 3
+    },
+    {
+      "name": "The MongolZ",
+      "rank": 7
+    },
+    {
+      "name": "PARIVISION",
+      "rank": 14
+    },
+    {
+      "name": "Aurora",
+      "rank": 8
+    },
+    {
+      "name": "FURIA",
+      "rank": 11
+    },
+    {
+      "name": "MOUZ",
+      "rank": 5
+    },
+    {
+      "name": "FUT",
+      "rank": 12
+    },
+    {
+      "name": "Spirit",
+      "rank": 2
+    },
+    {
+      "name": "G2",
+      "rank": 13
+    },
+    {
+      "name": "BetBoom",
+      "rank": 17
+    },
+    {
+      "name": "9z",
+      "rank": 15
+    },
+    {
+      "name": "Monte",
+      "rank": 21
+    },
+    {
+      "name": "B8",
+      "rank": 16
+    },
+    {
+      "name": "Legacy",
+      "rank": 6
+    }
+  ],
+  "map_prob_overrides": {},
+  "locked_picks": {
+    "3-0": [],
+    "0-3": [],
+    "advance": []
+  },
+  "target_correct": 5
+}

@@ -1,0 +1,194 @@
+{
+ "majors": {
+  "austin2025": {
+   "name": "BLAST.tv Austin Major 2025",
+   "seeding_snapshot": "2025-05-05",
+   "results_snapshot": "2025-07-07",
+   "final_bo": 3,
+   "all_bo3_stages": [],
+   "stages": {
+    "S1": [
+     "2025-06-03",
+     "2025-06-06"
+    ],
+    "S2": [
+     "2025-06-07",
+     "2025-06-10"
+    ],
+    "S3": [
+     "2025-06-12",
+     "2025-06-15"
+    ],
+    "PO": [
+     "2025-06-19",
+     "2025-06-22"
+    ]
+   },
+   "participants": [
+    "B8",
+    "HEROIC",
+    "BetBoom",
+    "OG",
+    "Nemiga",
+    "Lynn Vision",
+    "Legacy",
+    "TYLOO",
+    "FlyQuest",
+    "NRG",
+    "Wildcard",
+    "Imperial",
+    "Chinggis Warriors",
+    "Complexity",
+    "Metizport",
+    "Fluxo",
+    "Virtus.pro",
+    "paiN",
+    "3DMAX",
+    "FURIA",
+    "FaZe",
+    "MIBR",
+    "M80",
+    "Falcons",
+    "Spirit",
+    "Natus Vincere",
+    "Vitality",
+    "The MongolZ",
+    "MOUZ",
+    "G2",
+    "Aurora",
+    "Liquid"
+   ],
+   "strength_snapshot": "2025-06-02"
+  },
+  "budapest2025": {
+   "name": "StarLadder Budapest Major 2025",
+   "seeding_snapshot": "2025-11-03",
+   "results_snapshot": "2026-01-05",
+   "final_bo": 5,
+   "all_bo3_stages": [],
+   "stages": {
+    "S1": [
+     "2025-11-24",
+     "2025-11-27"
+    ],
+    "S2": [
+     "2025-11-29",
+     "2025-12-02"
+    ],
+    "S3": [
+     "2025-12-04",
+     "2025-12-07"
+    ],
+    "PO": [
+     "2025-12-11",
+     "2025-12-14"
+    ]
+   },
+   "participants": [
+    "M80",
+    "FlyQuest",
+    "B8",
+    "Fnatic",
+    "Ninjas in Pyjamas",
+    "PARIVISION",
+    "Imperial",
+    "FaZe",
+    "NRG",
+    "Fluxo",
+    "Legacy",
+    "The Huns",
+    "RED Canids",
+    "GamerLegion",
+    "Lynn Vision",
+    "Rare Atom",
+    "Natus Vincere",
+    "Liquid",
+    "Passion UA",
+    "3DMAX",
+    "Astralis",
+    "Aurora",
+    "TYLOO",
+    "MIBR",
+    "Spirit",
+    "FURIA",
+    "MOUZ",
+    "Vitality",
+    "The MongolZ",
+    "Falcons",
+    "G2",
+    "paiN"
+   ],
+   "strength_snapshot": "2025-11-03"
+  },
+  "cologne2026": {
+   "name": "IEM Cologne Major 2026",
+   "seeding_snapshot": "2026-05-04",
+   "results_snapshot": "2026-07-06",
+   "final_bo": 5,
+   "all_bo3_stages": [
+    "S3"
+   ],
+   "stages": {
+    "S1": [
+     "2026-06-02",
+     "2026-06-05"
+    ],
+    "S2": [
+     "2026-06-06",
+     "2026-06-09"
+    ],
+    "S3": [
+     "2026-06-11",
+     "2026-06-15"
+    ],
+    "PO": [
+     "2026-06-18",
+     "2026-06-21"
+    ]
+   },
+   "participants": [
+    "B8",
+    "BetBoom",
+    "GamerLegion",
+    "M80",
+    "MIBR",
+    "TYLOO",
+    "BIG",
+    "FlyQuest",
+    "Liquid",
+    "NRG",
+    "Lynn Vision",
+    "THUNDER dOWNUNDER",
+    "Sharks",
+    "HEROIC",
+    "Gaimin Gladiators",
+    "SINNERS",
+    "FUT",
+    "Spirit",
+    "G2",
+    "9z",
+    "Monte",
+    "Legacy",
+    "paiN",
+    "Astralis",
+    "Aurora",
+    "Vitality",
+    "Falcons",
+    "Natus Vincere",
+    "The MongolZ",
+    "MOUZ",
+    "FURIA",
+    "PARIVISION"
+   ],
+   "strength_snapshot": "2026-06-01"
+  }
+ },
+ "_doc": {
+  "seeding_snapshot": "VRS invitation snapshot Valve used to seed the Major (stage seeds 1-8 / Stage 1 order)",
+  "strength_snapshot": "latest monthly VRS snapshot before the Major starts — used for team strength (predicts better)",
+  "results_snapshot": "first monthly snapshot after the Major — its per-team detail files list the Major's matches",
+  "participants": "names exactly as written in VRS standings",
+  "all_bo3_stages": "Swiss stages where every match was Bo3",
+  "final_bo": "grand final series length"
+ }
+}
