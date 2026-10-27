@@ -1,0 +1,67 @@
+name: Release
+
+# How to release: GitHub → Releases → "Draft a new release" → create a tag like v0.2.0
+# (target: main) → Publish. This workflow then attaches cs2-pickem.zip to the release and,
+# if the description is empty, fills it from the matching CHANGELOG.md section.
+# Tags with a hyphen (v0.2.0-beta.1) should be published as pre-releases.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install numpy
+
+      - name: Smoke tests
+        run: |
+          python scripts/swiss_sim.py assets/example_stage3_cologne2026.json --sims 2000 --seed 1
+          python scripts/bracket_sim.py --template gsl4 --teams A B C D > /tmp/gsl.json
+          python scripts/playoffs_sim.py --help > /dev/null
+          python scripts/predict.py --help > /dev/null
+
+      - name: Build the skill archive
+        run: |
+          VERSION="${TAG#v}"
+          mkdir -p dist/cs2-pickem
+          tar -cf - --exclude='./.git' --exclude='./.github' --exclude='./.gitignore' --exclude='./dist' \
+            --exclude='./README.md' --exclude='./CHANGELOG.md' --exclude='./docs' --exclude='__pycache__' . \
+            | tar -xf - -C dist/cs2-pickem
+          cd dist
+          zip -rq "cs2-pickem-${VERSION}.zip" cs2-pickem
+          cp "cs2-pickem-${VERSION}.zip" cs2-pickem.zip
+
+      - name: Attach the archive to the release
+        run: gh release upload "$TAG" dist/cs2-pickem.zip "dist/cs2-pickem-${TAG#v}.zip" --clobber --repo "$GITHUB_REPOSITORY"
+
+      - name: Fill an empty description from CHANGELOG
+        run: |
+          BODY="$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json body -q .body)"
+          if [ -n "$(echo "$BODY" | tr -d '[:space:]')" ]; then
+            echo "Release already has a description — leaving it as is."
+            exit 0
+          fi
+          VERSION="${TAG#v}"
+          awk -v v="[${VERSION}]" 'index($0, "## " v) == 1 {p = 1; next} /^## \[/ {p = 0} /^\[.*\]: / {p = 0} p' CHANGELOG.md > notes.md
+          if [ -z "$(tr -d '[:space:]' < notes.md)" ]; then
+            echo "::warning::CHANGELOG.md has no section for ${VERSION}; description left empty."
+            exit 0
+          fi
+          printf '\n---\n**Install:** download `cs2-pickem.zip` below and upload it in Claude (*Customize → Skills*), or `git clone` the repo into `~/.claude/skills/cs2-pickem`.\n' >> notes.md
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file notes.md
