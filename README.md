@@ -16,13 +16,13 @@ Tell Claude *"the Major starts next week, help me with my Pick'Em"* — it finds
 ## Install
 
 **Claude apps (web, desktop, mobile)**
-1. Download **[`cs2-pickem.zip`](https://github.com/OWNER/cs2-pickem/releases/latest/download/cs2-pickem.zip)** from the latest release.
+1. Download **[`cs2-pickem.zip`](https://github.com/RomkaGP228/pick-em-skill/releases/latest/download/cs2-pickem.zip)** from the latest release.
 2. Turn on code execution: *Settings → Capabilities → Code execution and file creation*.
 3. Open *Customize → Skills → + → Create skill → Upload a skill* and choose the ZIP.
 
 **Claude Code**
 ```bash
-git clone https://github.com/OWNER/cs2-pickem ~/.claude/skills/cs2-pickem
+git clone https://github.com/RomkaGP228/pick-em-skill ~/.claude/skills/cs2-pickem
 ```
 For a single project, clone into `.claude/skills/cs2-pickem` inside that repository instead.
 
