@@ -65,11 +65,21 @@ ALIASES = {
     "mongolz": "themongolz", "tmz": "themongolz", "vp": "virtuspro", "gl": "gamerlegion",
     "pua": "passionua", "lvg": "lynnvision", "lynnvisiongaming": "lynnvision",
     "faze": "faze", "fazeclan": "faze", "gaiminggladiators": "gaimingladiators",
+    "1w": "1win", "1wteam": "1win",
 }
 
 
 def norm(s):
     return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+_NOISE = re.compile(r"\b(team|esports?|gaming|clan|club|gg)\b", re.I)
+
+
+def core(s):
+    """Name without organisation noise words: 'Team Spirit' -> 'spirit', 'FUT Esports' -> 'fut'."""
+    c = norm(_NOISE.sub(" ", s))
+    return c or norm(s)
 
 
 def match(name, table):
@@ -78,6 +88,10 @@ def match(name, table):
     exact = [r for r in table if norm(r[2]) == n]
     if exact:
         return exact[0]
+    c = ALIASES.get(core(name), core(name))
+    same_core = [r for r in table if core(r[2]) == c]
+    if same_core:
+        return min(same_core, key=lambda r: r[0])
     # partial: query is the start of the VRS name ("Gaimin" -> "Gaimin Gladiators"),
     # or a VRS name of 4+ chars is contained in the query ("Team Liquid" -> "Liquid")
     part = [r for r in table if len(n) >= 3 and norm(r[2]).startswith(n)]

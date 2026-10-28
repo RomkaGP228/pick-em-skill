@@ -4,7 +4,8 @@ Shared strength model for all cs2-pickem scripts.
 Calibrated on the 318 matches of the Austin 2025, Budapest 2025 and Cologne 2026 Majors and
 ~1,600 LAN matches between VRS top-40 teams in 2025-2026 (see references/calibration.md):
   * base rating   = 1700 - RANK_SCALE * ln(global VRS rank)
-  * + elo_adj     = recent-form correction for VRS top-20 teams, from scripts/elo.py:
+  * + elo_adj     = recent-form correction for VRS top-20 teams (top-50 at half weight on
+                    non-Major events), from scripts/elo.py:
                     ELO_DEV_COEF * (Elo - (alpha + ELO_BETA*ln rank)), capped at ±ELO_DEV_CAP,
                     where alpha is re-centred on the current VRS top-20 at every date (Elo drifts
                     upward over time; without re-centring top-20 teams would get a free bonus)
@@ -28,6 +29,10 @@ ELO_BETA = -100.0
 ELO_DEV_COEF = 0.412
 ELO_DEV_CAP = 100.0
 ELO_TOP_N = 20
+# non-Major events only: half the correction for VRS ranks 21-50 (helped on 2025-26 LAN matches,
+# hurt at Majors, where ranks 21-50 are mostly regional Stage 1 teams with inflated Elo)
+ELO_EXT_TOP_N = 50
+ELO_EXT_FACTOR = 0.5
 
 # Gauss-Hermite nodes/weights (probabilists', normalised) for integrating over rating noise
 _GH = [(-2.856970013872806, 0.011257411327720691), (-1.355626179974266, 0.2220759220056126),
@@ -51,12 +56,19 @@ def elo_alpha(top_teams):
     return sum(e - ELO_BETA * math.log(max(1, int(r))) for r, e in pts) / len(pts)
 
 
-def elo_adjustment(rank, elo, alpha):
-    """Recent-form correction for VRS top-20 teams (0 for everyone else)."""
-    if rank is None or elo is None or alpha is None or int(rank) > ELO_TOP_N:
+def elo_adjustment(rank, elo, alpha, event_type="major"):
+    """Recent-form correction: VRS top-20 always; ranks 21-50 at half weight on non-Major events."""
+    if rank is None or elo is None or alpha is None:
         return 0.0
-    dev = float(elo) - (alpha + ELO_BETA * math.log(max(1, int(rank))))
-    return max(-ELO_DEV_CAP, min(ELO_DEV_CAP, ELO_DEV_COEF * dev))
+    rank = int(rank)
+    if rank <= ELO_TOP_N:
+        factor = 1.0
+    elif event_type == "other" and rank <= ELO_EXT_TOP_N:
+        factor = ELO_EXT_FACTOR
+    else:
+        return 0.0
+    dev = float(elo) - (alpha + ELO_BETA * math.log(max(1, rank)))
+    return max(-ELO_DEV_CAP, min(ELO_DEV_CAP, factor * ELO_DEV_COEF * dev))
 
 
 def base_rating(team):

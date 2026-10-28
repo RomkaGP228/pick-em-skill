@@ -90,7 +90,7 @@ def main():
         if hist is None:
             return lambda team, rank: 0.0
         if date not in _elo_cache:
-            R, *_ = run_elo(hist, date)
+            R = run_elo(hist, date)[0]
             _, table = ranks_before(repo, date)
             _elo_cache[date] = (R, table_alpha(table, R))
         R, alpha = _elo_cache[date]

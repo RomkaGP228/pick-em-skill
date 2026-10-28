@@ -7,7 +7,35 @@ Sections: **Added**, **Changed**, **Fixed**, **Removed**, and **Data** (new Majo
 
 ## [Unreleased]
 
-## [0.2.0] - 2026-10-27
+Fixes from running 0.3.0 on PGL Masters Bucharest 2026. Backtest unchanged (Swiss 37/90, 5/9 stages; playoffs 11/21).
+
+### Added
+- `scripts/liquipedia_fresh.py`: collects the fresh matches for `elo.py --extra` from Liquipedia team match pages through the MediaWiki API (the web pages return 403 to automated fetches). Respects the 1 request / 30 s limit, caches pages, retries truncated responses, de-duplicates series listed on both teams' pages.
+
+### Fixed
+- `elo.py --extra`: a fresh match went to an old history entity with the same spelling instead of the ranked team ("BetBoom" → old BetBoom, not today's BETBOOM #11), silently and without a warning. An exact VRS-table name now wins over a history name; partial table matches still come after it.
+- Roster check compared the tournament roster only with the last match's roster, so a recent stand-in (jL for Vitality, 10 matches in Aug–Sep) was flagged as a new signing and got `sd 40`. A player now counts as new only if he played none of the team's last 10 matches (`RECENT_ROSTERS`).
+- Alias "1w" / "1w Team" → 1win.
+
+## [0.3.0] - 2026-10-27
+
+Second round of fixes from the PGL Bucharest 2026 test, released together with the 0.2.0 model update below. Each point was backtested; see `references/calibration.md`.
+
+### Added
+- `elo.py --extra fresh.json`: matches played after the last VRS update (collected from Liquipedia) go through the same Elo. VRS data lags by up to a month in 2026, and a month-old Elo loses ~60% of the correction's value. The report shows fresh matches per team and warns when data is more than a week old.
+- Roster check: `"roster"` per team in the stage file (or `--roster`) is compared with the last roster in the data; new players → warning, `"sd": 40` and a note. Catches signings that haven't played yet.
+- In-tournament updates: append results to `fresh.json` and refill (optional; neutral on Majors).
+- Non-Major events: `elo_adj` also for VRS ranks 21-50 at half weight (LAN 2026: 0.647 → 0.639; not used at Majors, where it hurt).
+- `assets/example_fresh_matches.json`.
+
+### Fixed
+- Team-name matching ignores organisation words (Team, Esports, Gaming, Clan): "FUT Esports" → FUT, "Team Spirit" → Spirit. Unknown teams in `--extra` produce a warning instead of silently becoming new 1400-rated teams.
+
+### Not adopted
+- Extra weight on recent matches (higher K, rating decay): worse at Majors or everywhere.
+- Map-score weighting and automatic map pools: no map data to calibrate them yet.
+
+## 0.2.0 - 2026-10-27 (not released separately; included in 0.3.0)
 
 Model update after a live test on PGL Bucharest 2026. Every change was tested on data the model never saw; ideas that didn't help were dropped (see `references/calibration.md`).
 
@@ -45,6 +73,6 @@ First public beta.
 - Strength model calibrated on them (leave-one-Major-out): `rating = 1700 − 90·ln(VRS rank)`, Bo1 shrink 0.8.
 - Seeding rule verified: the pairing engine reproduces all 45 rounds of all 9 Swiss stages.
 
-[Unreleased]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.1.0...v0.2.0
+[Unreleased]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.1.0...v0.3.0
 [0.1.0]: https://github.com/RomkaGP228/pick-em-skill/releases/tag/v0.1.0

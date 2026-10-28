@@ -1,0 +1,31 @@
+{
+  "source": "Liquipedia team match pages, collected 2026-10-23 (example — replace with real results)",
+  "matches": [
+    {
+      "date": "2026-10-11",
+      "team1": "FUT Esports",
+      "team2": "Aurora Gaming",
+      "score": "2-1",
+      "tier": "A",
+      "event": "Example Cup 2026",
+      "lan": true
+    },
+    {
+      "date": "2026-10-12",
+      "team1": "Natus Vincere",
+      "team2": "Team Spirit",
+      "winner": "Natus Vincere",
+      "score": "2-0",
+      "tier": "S",
+      "event": "Example Masters 2026",
+      "lan": true,
+      "roster1": [
+        "Aleksib",
+        "iM",
+        "b1t",
+        "w0nderful",
+        "makazze"
+      ]
+    }
+  ]
+}
