@@ -22,6 +22,16 @@ Tooling release after the PGL Bucharest 2026 test; it also ships the unreleased 
 
 ### Changed
 - Clear error messages: `swiss_sim.py` without numpy; a team without a VRS rank.
+- `liquipedia_event.py` skips qualifier subpages by default (`--with-qualifiers` to include them).
+
+### Fixed
+- `liquipedia_event.py` on real pages (found on PGL Bucharest 2026 before release):
+  - results are read when map scores exist only as halves, with overtimes up to `o4`, as forfeits (`score=FF` / `W`, `walkover=`), or without `finished=` once the maps are done (previously "0 finished");
+  - short team tags in matches (`vit`, `tl`, `mongolz`, `navi`, `dendele`…) are matched to participants, so these teams get rosters; unmatched tags are listed, `--team tag="Full Name"` fixes them by hand;
+  - `playoffs.json` for `Bracket/8`: read from Liquipedia, or seeded from the Swiss standings (1v8, 4v5, 2v7, 3v6) while the bracket is still TBD; `swiss_N.json` now has `final_standings`;
+  - Swiss seeds: Liquipedia lists round 1 in schedule order, not seed order (PGL Masters Bucharest 2026: FUT listed 1st, seeded 7th), so simulated rounds 2–5 and the final-standings tiebreaks used wrong seeds. Seeds now keep the round-1 pairs and sides from Liquipedia and are ordered by VRS rank on the newest snapshot before the event that reproduces the played rounds (both PGL Bucharest 2026 events: rounds 1–5 reproduced); before round 2 the newest snapshot is used and marked unverified. `--no-vrs` / `--vrs-repo PATH`. On PGL Masters Bucharest 2026 this changed the blind Swiss card (3-0: Spirit + Vitality instead of Spirit + FUT);
+  - a missing page gives a clear message instead of `StopIteration`;
+  - the example page in `SKILL.md` / README is `PGL/2026/Masters`.
 
 ### Tested, not adopted
 - Non-Major scale: re-fitted values (0.87–1.02) were not better than 0.9 on held-out 2026 data; no overconfidence found on 746 held-out LAN matches.

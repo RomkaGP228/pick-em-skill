@@ -1,0 +1,17 @@
+==Playoffs==
+{{Bracket|Bracket/8|id=PO
+|R1M1header=Quarterfinals
+|R1M1={{Match|opponent1={{TeamOpponent|dendele}}|opponent2={{TeamOpponent|fal}}|date=October 30, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=6|t2ct=9|t1t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=5|t2ct=4|t1ct=8|t2t=0|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}}}
+|R1M2={{Match|opponent1={{TeamOpponent|vit}}|opponent2={{TeamOpponent|tl}}|date=October 30, 2026 - 17:00 {{Abbr/CET}}|bestof=3
+|map1={{Map|map=}}|map2={{Map|map=}}|map3={{Map|map=}}}}
+|R1M3={{Match|opponent1={{TeamOpponent|mouz}}|opponent2={{TeamOpponent|g2}}|date=October 30, 2026 - 17:00 {{Abbr/CET}}|bestof=3
+|map1={{Map|map=}}|map2={{Map|map=}}|map3={{Map|map=}}}}
+|R1M4={{Match|opponent1={{TeamOpponent|mongolz}}|opponent2={{TeamOpponent|aurora}}|date=October 30, 2026 - 17:00 {{Abbr/CET}}|bestof=3
+|map1={{Map|map=}}|map2={{Map|map=}}|map3={{Map|map=}}}}
+|R2M1={{Match|bestof=3}}
+|R2M2={{Match|bestof=3}}
+|R3M1={{Match|bestof=5}}
+}}

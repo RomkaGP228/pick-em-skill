@@ -17,6 +17,8 @@ def check(name, cond, detail=""):
 
 
 def run(*args):
+    if args and args[0].endswith("liquipedia_event.py") and "--vrs-repo" not in args:
+        args = (*args, "--no-vrs")                # offline: no VRS clone in the regular tests
     return subprocess.run([sys.executable, *args], capture_output=True, text=True)
 
 
@@ -86,6 +88,72 @@ with tempfile.TemporaryDirectory() as tmp:
     run(os.path.join(S, "predict.py"), "probs", pin, "--log", log)
     r = run(os.path.join(S, "predict.py"), "results", log, os.path.join(out, "matches.json"))
     check("predict.py results matches 'Team Vitality' to 'Vitality'", "Updated: 1;" in r.stdout, r.stdout + r.stderr)
+
+    # Real-page layout: team tags (vit, tl, mongolz…), map scores only as halves + overtimes,
+    # forfeits (score=FF / W), a finished match without finished=, an empty Bracket/8.
+    exp = json.load(open(os.path.join(F, "real_expected.json")))
+    rl = os.path.join(tmp, "rl")
+    r = run(os.path.join(S, "liquipedia_event.py"), "--wikitext", os.path.join(F, "real_main.wiki"),
+            os.path.join(F, "real_po_tbd.wiki"), "--out", rl)
+    check("real layout: runs", r.returncode == 0, r.stderr[-300:])
+    ev = json.load(open(os.path.join(rl, "event.json")))
+    fresh = json.load(open(os.path.join(rl, "matches.json")))["matches"]
+    check("real layout: 32 results from halves/OT, forfeit excluded", len(fresh) == 32, str(len(fresh)))
+    check("real layout: tags resolved to full names", all(m["team1"] in ev["participants"] and m["team2"] in ev["participants"] for m in fresh))
+    sw = json.load(open(os.path.join(rl, "swiss_1.json")))
+    check("real layout: every Swiss team has a roster", all(len(t.get("roster", [])) == 5 for t in sw["teams"]))
+    check("real layout: final standings", sw.get("final_standings", [])[:8] == exp["expected_top8"])
+    po = json.load(open(os.path.join(rl, "playoffs.json")))
+    s = exp["expected_top8"]
+    check("TBD Bracket/8 seeded from Swiss standings (1v8, 4v5, 2v7, 3v6)",
+          [t["name"] for t in po["teams"]] == [s[0], s[7], s[3], s[4], s[1], s[6], s[2], s[5]])
+    rl2 = os.path.join(tmp, "rl2")
+    run(os.path.join(S, "liquipedia_event.py"), "--wikitext", os.path.join(F, "real_main.wiki"),
+        os.path.join(F, "real_po_filled.wiki"), "--out", rl2)
+    po = json.load(open(os.path.join(rl2, "playoffs.json")))
+    check("filled Bracket/8: QF result read from halves", po["results"] == {"QF1": s[0]}, str(po.get("results")))
+
+    bad = os.path.join(tmp, "bad.wiki")
+    open(bad, "w").write(open(os.path.join(F, "real_main.wiki")).read().replace("{{TeamOpponent|b8", "{{TeamOpponent|bt8x"))
+    r = run(os.path.join(S, "liquipedia_event.py"), "--wikitext", bad, "--out", os.path.join(tmp, "bad"))
+    check("unknown tag → warning", "not matched to any participant" in r.stdout + r.stderr and "bt8x" in r.stdout + r.stderr)
+    r = run(os.path.join(S, "liquipedia_event.py"), "--wikitext", bad, "--out", os.path.join(tmp, "bad2"), "--team", "bt8x=B8")
+    check("--team fixes an unknown tag", "not matched to any participant" not in r.stdout + r.stderr, r.stdout[-300:])
+
+    import liquipedia_event as le
+    # Seeds from VRS when the Liquipedia round-1 order is not the seed order (PGL Masters 2026:
+    # FUT listed first, but seeded 7th). Shuffle round 1, give a VRS snapshot in the true seed
+    # order, expect the true order back; with only round 1 known the newest snapshot is used.
+    sw = json.load(open(os.path.join(rl, "swiss_1.json")))
+    true = [t["name"] for t in sw["teams"]]
+    rounds = sw["rounds"]
+    shuffled = [rounds[0][i] for i in (6, 2, 0, 7, 4, 1, 3, 5)]
+    repo = os.path.join(tmp, "vrs")
+    for d, order in (("2026_10_05", true), ("2026_09_07", list(reversed(true)))):
+        os.makedirs(os.path.join(repo, "invitation", "2026"), exist_ok=True)
+        with open(os.path.join(repo, "invitation", "2026", f"standings_global_{d}.md"), "w") as fh:
+            fh.write("| Standing | Points | Team Name | Roster |\n| :- | -: | :- | :- |\n")
+            fh.writelines(f"| {i} | {2000 - i} | {t} | a, b, c, d, e |\n" for i, t in enumerate(order, 1))
+    os.makedirs(os.path.join(repo, ".git"), exist_ok=True)   # ensure_repo: treat as an existing clone
+    import importlib.util
+    has_np = importlib.util.find_spec("numpy") is not None
+    seeds, ver, note = le.vrs_seeds(shuffled, [shuffled] + rounds[1:], "2026-10-24", repo)
+    if has_np:
+        check("VRS seeds: shuffled round 1 restored and verified", seeds == true and ver and "2026-10-05" in note, note)
+    seeds, ver, note = le.vrs_seeds(shuffled, [shuffled], "2026-10-24", repo)
+    check("VRS seeds before round 2: newest snapshot, marked unverified", seeds == true and "unverified" in note, note)
+    seeds, ver, note = le.vrs_seeds(shuffled, [shuffled] + rounds[1:], "2026-10-01", repo)
+    if has_np:
+        check("VRS seeds: snapshot that does not reproduce the rounds is rejected", seeds is None, note)
+    halves = {"t1ct": "7", "t1t": "5", "t2t": "5", "t2ct": "7"}
+    for o in (1, 2, 3):
+        halves.update({f"o{o}t1ct": "2", f"o{o}t1t": "1", f"o{o}t2t": "1", f"o{o}t2ct": "2"})
+    halves.update({"o4t1ct": "3", "o4t1t": "1", "o4t2t": "0", "o4t2ct": "1"})
+    s1, s2 = le.map_scores(halves)
+    check("map score summed over halves and overtimes up to o4", (s1, s2) == (25, 22), f"{s1}:{s2}")
+    check("qualifier subpages skipped by default",
+          all(le.QUALIFIER_RE.search(t) for t in ["PGL/2026/Masters/Qualifier", "PGL/2026/Masters/Europe/Closed_Qualifier"])
+          and not any(le.QUALIFIER_RE.search(t) for t in ["PGL/2026/Masters", "PGL/2026/Masters/Playoffs"]))
 
 print("\n" + ("ALL TESTS PASSED" if not fails else f"{len(fails)} FAILED: {', '.join(fails)}"))
 sys.exit(1 if fails else 0)

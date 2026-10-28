@@ -119,7 +119,7 @@ The instructions (`SKILL.md`, `references/`) are in Russian; Claude answers in t
 | `scripts/backtest.py` | Leave-one-Major-out backtest of cards and brackets |
 
 ```bash
-python3 scripts/liquipedia_event.py "PGL/2026/Masters/Bucharest" --out event/
+python3 scripts/liquipedia_event.py "PGL/2026/Masters" --out event/     # page title from the Liquipedia URL
 python3 scripts/elo.py --date 2026-11-25 Vitality "Natus Vincere" FURIA
 python3 scripts/elo.py --date 2026-11-25 --fill stage.json --extra fresh.json
 python3 scripts/swiss_sim.py assets/example_stage3_cologne2026.json --sims 20000
