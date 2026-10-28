@@ -1,71 +1,88 @@
 {
-  "stage": "IEM Cologne Major 2026 — Stage 3 (пример: реальный посев, ранги VRS на 01.06.2026, без поправок)",
+  "stage": "IEM Cologne Major 2026 — Stage 3 (пример: реальный посев, ранг VRS + elo_adj на 11.06.2026, без ручных поправок)",
   "format": "all_bo3",
+  "event_type": "major",
   "advance_counts_3_0": false,
   "teams": [
     {
       "name": "Vitality",
-      "rank": 1
+      "rank": 1,
+      "elo_adj": -1.2
     },
     {
       "name": "Natus Vincere",
-      "rank": 4
+      "rank": 4,
+      "elo_adj": 14.4
     },
     {
       "name": "Falcons",
-      "rank": 3
+      "rank": 3,
+      "elo_adj": 9.4
     },
     {
       "name": "The MongolZ",
-      "rank": 7
+      "rank": 7,
+      "elo_adj": -14.5
     },
     {
       "name": "PARIVISION",
-      "rank": 14
+      "rank": 14,
+      "elo_adj": -12.3
     },
     {
       "name": "Aurora",
-      "rank": 8
+      "rank": 8,
+      "elo_adj": -19.7
     },
     {
       "name": "FURIA",
-      "rank": 11
+      "rank": 11,
+      "elo_adj": 17.2
     },
     {
       "name": "MOUZ",
-      "rank": 5
+      "rank": 5,
+      "elo_adj": 4.9
     },
     {
       "name": "FUT",
-      "rank": 12
+      "rank": 12,
+      "elo_adj": 16.2
     },
     {
       "name": "Spirit",
-      "rank": 2
+      "rank": 2,
+      "elo_adj": 15.3
     },
     {
       "name": "G2",
-      "rank": 13
+      "rank": 13,
+      "elo_adj": 20.1
     },
     {
       "name": "BetBoom",
-      "rank": 17
+      "rank": 17,
+      "elo_adj": 39.1
     },
     {
       "name": "9z",
-      "rank": 15
+      "rank": 15,
+      "elo_adj": 27.9
     },
     {
       "name": "Monte",
-      "rank": 21
+      "rank": 21,
+      "elo_adj": 0.0
     },
     {
       "name": "B8",
-      "rank": 16
+      "rank": 16,
+      "elo_adj": -6.5
     },
     {
       "name": "Legacy",
-      "rank": 6
+      "rank": 6,
+      "elo_adj": -7.5
     }
   ],
   "map_prob_overrides": {},

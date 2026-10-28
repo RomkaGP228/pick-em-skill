@@ -1,0 +1,199 @@
+==Swiss Stage==
+{{Matchlist|id=S1|title=Round 1 Matches
+|M1={{Match
+    |opponent1={{TeamOpponent|team vitality|score=0}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|legacy|score=2}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=8|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=10|score2=13|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M2={{Match
+    |opponent1={{TeamOpponent|natus vincere|score=0}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|b8|score=2}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=10|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=7|score2=13|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M3={{Match
+    |opponent1={{TeamOpponent|team falcons|score=0}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|monte|score=2}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=10|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=11|score2=13|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M4={{Match
+    |opponent1={{TeamOpponent|the mongolz|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|9z team|score=2}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=6|finished=true}}
+    |map2={{Map|map=Nuke|score1=5|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=11|score2=13|finished=true}}
+    }}
+|M5={{Match
+    |opponent1={{TeamOpponent|parivision|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|betboom team|score=2}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=4|finished=true}}
+    |map2={{Map|map=Nuke|score1=5|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=3|score2=13|finished=true}}
+    }}
+|M6={{Match
+    |opponent1={{TeamOpponent|aurora gaming|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|g2 esports|score=2}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=10|finished=true}}
+    |map2={{Map|map=Nuke|score1=9|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=9|score2=13|finished=true}}
+    }}
+|M7={{Match
+    |opponent1={{TeamOpponent|furia|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|team spirit|score=1}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=5|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=8|finished=true}}
+    |map3={{Map|map=Ancient|score1=13|score2=4|finished=true}}
+    }}
+|M8={{Match
+    |opponent1={{TeamOpponent|mouz|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|fut esports|score=0}}<ref>source</ref>
+    |date=October 24, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=10|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=6|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+}}
+{{Matchlist|id=S2|title=Round 2 Matches
+|M1={{Match
+    |opponent1={{TeamOpponent|furia|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|legacy|score=2}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=7|finished=true}}
+    |map2={{Map|map=Nuke|score1=9|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=11|score2=13|finished=true}}
+    }}
+|M2={{Match
+    |opponent1={{TeamOpponent|mouz|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|b8|score=2}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=11|finished=true}}
+    |map2={{Map|map=Nuke|score1=9|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=6|score2=13|finished=true}}
+    }}
+|M3={{Match
+    |opponent1={{TeamOpponent|g2 esports|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|monte|score=2}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=7|finished=true}}
+    |map2={{Map|map=Nuke|score1=5|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=8|score2=13|finished=true}}
+    }}
+|M4={{Match
+    |opponent1={{TeamOpponent|betboom team|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|9z team|score=0}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=7|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=7|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M5={{Match
+    |opponent1={{TeamOpponent|team vitality|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|team spirit|score=0}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=10|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=10|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M6={{Match
+    |opponent1={{TeamOpponent|natus vincere|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|fut esports|score=0}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=4|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=9|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M7={{Match
+    |opponent1={{TeamOpponent|team falcons|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|aurora gaming|score=0}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=7|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=9|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M8={{Match
+    |opponent1={{TeamOpponent|the mongolz|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|parivision|score=1}}<ref>source</ref>
+    |date=October 25, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=3|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=9|finished=true}}
+    |map3={{Map|map=Ancient|score1=13|score2=8|finished=true}}
+    }}
+}}
+{{Matchlist|id=S3|title=Round 3 Matches
+|M1={{Match
+    |opponent1={{TeamOpponent|monte|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|betboom team|score=1}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=3|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=7|finished=true}}
+    |map3={{Map|map=Ancient|score1=13|score2=3|finished=true}}
+    }}
+|M2={{Match
+    |opponent1={{TeamOpponent|b8|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|legacy|score=0}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=11|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=3|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M3={{Match
+    |opponent1={{TeamOpponent|9z team|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|g2 esports|score=0}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=7|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=7|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M4={{Match
+    |opponent1={{TeamOpponent|team vitality|score=0}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|the mongolz|score=2}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=8|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=8|score2=13|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M5={{Match
+    |opponent1={{TeamOpponent|natus vincere|score=1}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|mouz|score=2}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=9|finished=true}}
+    |map2={{Map|map=Nuke|score1=10|score2=13|finished=true}}
+    |map3={{Map|map=Ancient|score1=11|score2=13|finished=true}}
+    }}
+|M6={{Match
+    |opponent1={{TeamOpponent|team falcons|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|furia|score=1}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=11|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=7|finished=true}}
+    |map3={{Map|map=Ancient|score1=13|score2=9|finished=true}}
+    }}
+|M7={{Match
+    |opponent1={{TeamOpponent|parivision|score=0}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|team spirit|score=2}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=9|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=7|score2=13|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|M8={{Match
+    |opponent1={{TeamOpponent|aurora gaming|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|fut esports|score=1}}<ref>source</ref>
+    |date=October 26, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=3|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=9|finished=true}}
+    |map3={{Map|map=Ancient|score1=13|score2=8|finished=true}}
+    }}
+}}

@@ -6,14 +6,15 @@ For each Major in assets/majors_config.json and each Swiss stage:
   * seeds are rebuilt exactly as Valve does (stage seeds 1-8: invited teams by VRS at the
     seeding snapshot; 9-16: teams from the previous stage in final-standings order), and the
     pairing engine is checked against the real pairings;
-  * team strength = 1700 - A*ln(rank at strength snapshot), with A and the Bo1 shrink fitted on
-    the OTHER Majors only;
+  * team strength = 1700 - A*ln(rank at strength snapshot) + elo_adj (Elo frozen at the stage
+    start, see elo.py), with A and the Bo1 shrink fitted on the OTHER Majors only;
+    --no-elo reproduces the v0.1 model (rank only) for comparison;
   * the optimizer builds a card, which is scored against what really happened, next to a
     "by seed" baseline (seeds 1-2 at 3-0, 3-8 advance, 15-16 at 0-3).
 Then the playoff bracket is backtested the same way.
 
 Usage:
-  python backtest.py [--sims 10000] [--repo PATH]
+  python backtest.py [--sims 10000] [--repo PATH] [--no-elo]
 Needs assets/major_matches.json (built by calibrate.py --out).
 """
 import argparse
@@ -31,6 +32,8 @@ sys.path.insert(0, HERE)
 import swiss_sim as S  # noqa: E402
 from calibrate import fit, standings, series  # noqa: E402
 from vrs_ranks import ensure_repo, norm  # noqa: E402
+from elo import load_history, run_elo, ranks_before, table_alpha  # noqa: E402
+from model import elo_adjustment  # noqa: E402
 
 
 def rounds_of(rows, major, st):
@@ -74,10 +77,24 @@ def main():
     ap.add_argument("--repo")
     ap.add_argument("--config", default=os.path.join(HERE, "..", "assets", "majors_config.json"))
     ap.add_argument("--dataset", default=os.path.join(HERE, "..", "assets", "major_matches.json"))
+    ap.add_argument("--no-elo", action="store_true", help="rank-only model (v0.1) for comparison")
     a = ap.parse_args()
     cfg = json.load(open(a.config, encoding="utf-8"))["majors"]
     rows = json.load(open(a.dataset, encoding="utf-8"))
     repo = ensure_repo(a.repo)
+    hist = None if a.no_elo else load_history(repo)
+    _elo_cache = {}
+
+    def elo_adj_fn(date):
+        """team-name -> elo_adj, with Elo frozen at `date` (rank from strength snapshot)."""
+        if hist is None:
+            return lambda team, rank: 0.0
+        if date not in _elo_cache:
+            R = run_elo(hist, date)[0]
+            _, table = ranks_before(repo, date)
+            _elo_cache[date] = (R, table_alpha(table, R))
+        R, alpha = _elo_cache[date]
+        return lambda team, rank: elo_adjustment(rank, R.get(team), alpha)
     tot_m = tot_b = pass_m = pass_b = 0
     exp_pass = 0.0
     po_m = po_b = 0
@@ -86,7 +103,8 @@ def main():
         seed_rank = {norm(k): v[0] for k, v in standings(repo, mj["seeding_snapshot"]).items()}
         str_rank = {norm(k): v[0] for k, v in standings(repo, mj.get("strength_snapshot", mj["seeding_snapshot"])).items()}
         prev_adv = None
-        print(f"\n== {mj['name']} (fit on other Majors: A={A:.0f}, bo1_shrink={s:.2f})")
+        print(f"\n== {mj['name']} (fit on other Majors: A={A:.0f}, bo1_shrink={s:.2f}; "
+              f"{'rank only' if a.no_elo else 'rank + elo_adj'})")
         for st in ("S1", "S2", "S3"):
             R = rounds_of(rows, major, st)
             teams = sorted({t for x in R[1] for t in x[:2]})
@@ -96,7 +114,9 @@ def main():
                 seeds = sorted([t for t in teams if t not in prev_adv], key=lambda t: seed_rank[norm(t)]) + prev_adv
             ok, order, actual = replay(seeds, R)
             prev_adv = [t for t in order if actual[t].startswith("3")]
-            stage = S.Stage({"teams": [{"name": t, "rating": 1700 - A * math.log(str_rank[norm(t)])} for t in seeds],
+            ea = elo_adj_fn(mj["stages"][st][0])
+            stage = S.Stage({"teams": [{"name": t, "rating": 1700 - A * math.log(str_rank[norm(t)])
+                                        + ea(t, str_rank[norm(t)])} for t in seeds],
                              "format": "all_bo3" if st in mj["all_bo3_stages"] else "standard", "bo1_shrink": s})
             cats = S.run_sims(stage, a.sims, seed=7)
             card = S.optimize(cats, seeds)
@@ -108,7 +128,8 @@ def main():
                   f"(predicted P(5+)={card['p_at_least_target']:.0%}) | by-seed {cb}/10")
         # playoffs
         po = prev_adv
-        R = {t: 1700 - A * math.log(str_rank[norm(t)]) for t in po}
+        ea = elo_adj_fn(mj["stages"]["PO"][0])
+        R = {t: 1700 - A * math.log(str_rank[norm(t)]) + ea(t, str_rank[norm(t)]) for t in po}
         pm = lambda x, y, bo: series(1 / (1 + 10 ** (-(R[x] - R[y]) / 400)), bo)
         sd = {i + 1: po[i] for i in range(8)}
         qf = [(sd[1], sd[8]), (sd[4], sd[5]), (sd[2], sd[7]), (sd[3], sd[6])]

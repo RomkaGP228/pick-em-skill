@@ -1,0 +1,48 @@
+==Playoffs==
+{{Bracket|Bracket/8|id=PLAYOFFS
+|R1M1header=Quarterfinals
+|R1M1={{Match
+    |opponent1={{TeamOpponent|team vitality|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|legacy|score=1}}<ref>source</ref>
+    |date=October 30, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=8|score2=13|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=7|finished=true}}
+    |map3={{Map|map=Ancient|score1=13|score2=10|finished=true}}
+    }}
+|R1M2={{Match
+    |opponent1={{TeamOpponent|aurora gaming}}
+    |opponent2={{TeamOpponent|9z team}}
+    |date=October 30, 2026 - 17:00 {{Abbr/CEST}} |finished=
+    |map1={{Map|map=|score1=|score2=|finished=}}
+    |map2={{Map|map=|score1=|score2=|finished=}}
+    |map3={{Map|map=|score1=|score2=|finished=}}
+    }}
+|R1M3={{Match
+    |opponent1={{TeamOpponent|team spirit|score=2}}<!-- seed comment -->
+    |opponent2={{TeamOpponent|g2 esports|score=0}}<ref>source</ref>
+    |date=October 30, 2026 - 12:00 {{Abbr/CEST}} |finished=true
+    |map1={{Map|map=Inferno|score1=13|score2=3|finished=true}}
+    |map2={{Map|map=Nuke|score1=13|score2=8|finished=true}}
+    |map3={{Map|map=|score1=|score2=|finished=skip}}
+    }}
+|R1M4={{Match
+    |opponent1={{TeamOpponent|furia}}
+    |opponent2={{TeamOpponent|betboom team}}
+    |date=October 31, 2026 - 17:00 {{Abbr/CEST}} |finished=
+    |map1={{Map|map=|score1=|score2=|finished=}}
+    |map2={{Map|map=|score1=|score2=|finished=}}
+    |map3={{Map|map=|score1=|score2=|finished=}}
+    }}
+|R2M1header=Semifinals
+|R2M1={{Match
+    |opponent1={{TeamOpponent|team vitality}}
+    |opponent2={{TeamOpponent|aurora gaming}}
+    |date=October 31, 2026 - 17:00 {{Abbr/CEST}} |finished=
+    |map1={{Map|map=|score1=|score2=|finished=}}
+    |map2={{Map|map=|score1=|score2=|finished=}}
+    |map3={{Map|map=|score1=|score2=|finished=}}
+    }}
+|R2M2={{Match|opponent1={{TeamOpponent|}}|opponent2={{TeamOpponent|}}}}
+|R3M1header=Grand Final
+|R3M1={{Match|bestof=5|opponent1={{TeamOpponent|}}|opponent2={{TeamOpponent|}}}}
+}}

@@ -1,0 +1,163 @@
+{{Infobox league
+|name=Real-like Masters 2026
+|type=Offline
+|liquipediatier=1
+|sdate=2026-10-24
+}}
+==Participants==
+{{TeamCard|team=Team Vitality|p1=vit1|p2=vit2|p3=vit3|p4=vit4|p5=vit5}}
+{{TeamCard|team=Team Liquid|p1=tl1|p2=tl2|p3=tl3|p4=tl4|p5=tl5}}
+{{TeamCard|team=Natus Vincere|p1=navi1|p2=navi2|p3=navi3|p4=navi4|p5=navi5}}
+{{TeamCard|team=The MongolZ|p1=mongolz1|p2=mongolz2|p3=mongolz3|p4=mongolz4|p5=mongolz5}}
+{{TeamCard|team=DENDELE|p1=dendele1|p2=dendele2|p3=dendele3|p4=dendele4|p5=dendele5}}
+{{TeamCard|team=G2 Esports|p1=g21|p2=g22|p3=g23|p4=g24|p5=g25}}
+{{TeamCard|team=FaZe Clan|p1=faze1|p2=faze2|p3=faze3|p4=faze4|p5=faze5}}
+{{TeamCard|team=MOUZ|p1=mouz1|p2=mouz2|p3=mouz3|p4=mouz4|p5=mouz5}}
+{{TeamCard|team=Team Spirit|p1=spirit1|p2=spirit2|p3=spirit3|p4=spirit4|p5=spirit5}}
+{{TeamCard|team=FURIA|p1=furia1|p2=furia2|p3=furia3|p4=furia4|p5=furia5}}
+{{TeamCard|team=Aurora Gaming|p1=aurora1|p2=aurora2|p3=aurora3|p4=aurora4|p5=aurora5}}
+{{TeamCard|team=Team Falcons|p1=fal1|p2=fal2|p3=fal3|p4=fal4|p5=fal5}}
+{{TeamCard|team=PARIVISION|p1=pv1|p2=pv2|p3=pv3|p4=pv4|p5=pv5}}
+{{TeamCard|team=GamerLegion|p1=gl1|p2=gl2|p3=gl3|p4=gl4|p5=gl5}}
+{{TeamCard|team=B8|p1=b81|p2=b82|p3=b83|p4=b84|p5=b85}}
+{{TeamCard|team=3DMAX|p1=3dmax1|p2=3dmax2|p3=3dmax3|p4=3dmax4|p5=3dmax5}}
+==Swiss Stage==
+{{Matchlist|id=SW1|title=Round 1
+|M1={{Match|opponent1={{TeamOpponent|vit}}|opponent2={{TeamOpponent|spirit}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=5|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=4|t1ct=7|t2t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M2={{Match|opponent1={{TeamOpponent|tl}}|opponent2={{TeamOpponent|furia}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=7|t1ct=4|t2ct=6|t1t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=4|t1ct=9|t2t=0|finished=true}}}}
+|M3={{Match|opponent1={{TeamOpponent|navi}}|opponent2={{TeamOpponent|aurora}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=7|t1ct=5|t2ct=6|t1t=5|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M4={{Match|opponent1={{TeamOpponent|mongolz}}|opponent2={{TeamOpponent|fal}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=8|t2ct=9|t1t=0|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=3|t1ct=6|t2t=0|finished=true}}}}
+|M5={{Match|opponent1={{TeamOpponent|dendele}}|opponent2={{TeamOpponent|pv}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M6={{Match|opponent1={{TeamOpponent|g2}}|opponent2={{TeamOpponent|gl}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M7={{Match|opponent1={{TeamOpponent|faze}}|opponent2={{TeamOpponent|b8}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=8|t1ct=9|t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=6|t1ct=9|t2t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M8={{Match|opponent1={{TeamOpponent|mouz}}|opponent2={{TeamOpponent|3dmax}}|date=October 24, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=4|t1ct=9|t2t=0|finished=true}}}}
+}}
+{{Matchlist|id=SW2|title=Round 2
+|M1={{Match|opponent1={{TeamOpponent|vit}}|opponent2={{TeamOpponent|aurora}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}
+|map1={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=3|t1ct=5|t2t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=5|t1ct=6|t2t=2|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M2={{Match|opponent1={{TeamOpponent|tl}}|opponent2={{TeamOpponent|mouz}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=6|t2ct=9|t1t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M3={{Match|opponent1={{TeamOpponent|mongolz}}|opponent2={{TeamOpponent|faze}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=7|t1ct=5|t2ct=6|t1t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}}}
+|M4={{Match|opponent1={{TeamOpponent|dendele}}|opponent2={{TeamOpponent|g2}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M5={{Match|opponent1={{TeamOpponent|navi}}|opponent2={{TeamOpponent|3dmax}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=5|t1ct=6|t2t=1|finished=true}}}}
+|M6={{Match|opponent1={{TeamOpponent|spirit}}|opponent2={{TeamOpponent|b8}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=5|t1ct=4|t2ct=8|t1t=0|finished=true}}
+|map3={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}}}
+|M7={{Match|opponent1={{TeamOpponent|furia}}|opponent2={{TeamOpponent|gl}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=3|t2ct=9|t1t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M8={{Match|opponent1={{TeamOpponent|fal}}|opponent2={{TeamOpponent|pv}}|date=October 25, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=7|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=4|t1ct=7|t2t=0|finished=true}}}}
+}}
+{{Matchlist|id=SW3|title=Round 3
+|M1={{Match|opponent1={{TeamOpponent|mongolz}}|opponent2={{TeamOpponent|mouz}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=8|t1ct=4|t2ct=5|t1t=7|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=3|t2ct=9|t1t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M2={{Match|opponent1={{TeamOpponent|vit|score=FF}}|opponent2={{TeamOpponent|dendele|score=W}}|date=2026-10-26 14:00|finished=true}}
+|M3={{Match|opponent1={{TeamOpponent|g2}}|opponent2={{TeamOpponent|b8}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=8|t2ct=9|t1t=2|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=5|t2ct=7|t1ct=8|t2t=1|finished=true}}}}
+|M4={{Match|opponent1={{TeamOpponent|faze}}|opponent2={{TeamOpponent|gl}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=8|t1ct=9|t2t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=5|t1ct=7|t2t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M5={{Match|opponent1={{TeamOpponent|aurora}}|opponent2={{TeamOpponent|fal}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=8|t1ct=9|t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=8|t1ct=3|t2ct=5|t1t=0|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=5|finished=true}}}}
+|M6={{Match|opponent1={{TeamOpponent|tl}}|opponent2={{TeamOpponent|navi}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=5|t1ct=6|t2t=2|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M7={{Match|opponent1={{TeamOpponent|spirit}}|opponent2={{TeamOpponent|furia}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=0|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=6|t1ct=3|t2ct=7|t1t=0|finished=true}}
+|map3={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=8|t2ct=9|t1t=2|finished=true}}}}
+|M8={{Match|opponent1={{TeamOpponent|pv}}|opponent2={{TeamOpponent|3dmax}}|date=October 26, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=6|t1ct=7|t2t=4|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=6|t1ct=7|t2t=2|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+}}
+{{Matchlist|id=SW4|title=Round 4
+|M1={{Match|opponent1={{TeamOpponent|mongolz}}|opponent2={{TeamOpponent|aurora}}|date=October 27, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=5|t1ct=6|t2t=3|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=6|t1ct=7|t2t=0|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M2={{Match|opponent1={{TeamOpponent|vit}}|opponent2={{TeamOpponent|faze}}|date=October 27, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=5|t1ct=6|t2ct=8|t1t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=5|t2ct=7|t1ct=8|t2t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}}}
+|M3={{Match|opponent1={{TeamOpponent|tl}}|opponent2={{TeamOpponent|g2}}|date=October 27, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=5|t2ct=7|t1ct=8|t2t=0|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=5|t1ct=6|t2t=1|finished=true}}}}
+|M4={{Match|opponent1={{TeamOpponent|fal}}|opponent2={{TeamOpponent|furia}}|date=October 27, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=6|t2ct=6|t1ct=7|t2t=4|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}}}
+|M5={{Match|opponent1={{TeamOpponent|gl}}|opponent2={{TeamOpponent|b8}}|date=October 27, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=8|t2ct=4|t1ct=5|t2t=3|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M6={{Match|opponent1={{TeamOpponent|navi}}|opponent2={{TeamOpponent|pv}}|date=October 27, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=6|t1ct=3|t2ct=7|t1t=0|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+}}
+{{Matchlist|id=SW5|title=Round 5
+|M1={{Match|opponent1={{TeamOpponent|g2}}|opponent2={{TeamOpponent|pv}}|date=October 28, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=7|t2ct=4|t1ct=6|t2t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=ct|t1ct=6|t2t=6|t1t=6|t2ct=6|o1t1firstside=t|o1t1t=2|o1t2ct=1|o1t1ct=2|o1t2t=1|finished=true}}
+|map3={{Map|map=|finished=skip}}}}
+|M2={{Match|opponent1={{TeamOpponent|faze}}|opponent2={{TeamOpponent|fal}}|date=October 28, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=5|t1ct=9|t2t=0|finished=true}}
+|map2={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=8|t2ct=9|t1t=3|finished=true}}
+|map3={{Map|map=Mirage|t2firstside=ct|t2ct=6|t1t=6|t2t=6|t1ct=6|o1t2firstside=t|o1t2t=2|o1t1ct=1|o1t2ct=2|o1t1t=1|finished=true}}}}
+|M3={{Match|opponent1={{TeamOpponent|aurora}}|opponent2={{TeamOpponent|gl}}|date=October 28, 2026 - 12:00 {{Abbr/CET}}|finished=true
+|map1={{Map|map=Mirage|t2firstside=t|t2t=4|t1ct=6|t2ct=9|t1t=0|finished=true}}
+|map2={{Map|map=Mirage|t1firstside=t|t1t=5|t2ct=7|t1ct=8|t2t=2|finished=true}}
+|map3={{Map|map=Mirage|t1firstside=t|t1t=4|t2ct=6|t1ct=9|t2t=0|finished=true}}}}
+}}

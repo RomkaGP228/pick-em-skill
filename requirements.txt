@@ -1,0 +1,4 @@
+# Runtime: swiss_sim.py needs numpy; every other script uses only the standard library.
+numpy>=1.24
+# Only for scripts/calibrate.py and scripts/backtest.py (model recalibration):
+scipy>=1.10

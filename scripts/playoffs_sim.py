@@ -39,13 +39,13 @@ def main():
     teams = [t["name"] for t in cfg["teams"]]
     if len(teams) != 8:
         raise SystemExit("Need exactly 8 playoff teams in seed order")
-    model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"))
+    model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), event_type=cfg.get("event_type", "major"))
     rating = model.r
     final_bo = int(cfg.get("final_bo", 5))
     results = cfg.get("results") or {}
 
     def pm(a, b, bo):
-        return model.p_series(a, b, bo)
+        return model.p_series_expected(a, b, bo)
 
     s = {i + 1: teams[i] for i in range(8)}
     qf = {"QF1": (s[1], s[8]), "QF2": (s[4], s[5]), "QF3": (s[2], s[7]), "QF4": (s[3], s[6])}

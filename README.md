@@ -28,7 +28,7 @@ For a single project, clone into `.claude/skills/cs2-pickem` inside that reposit
 
 **Other Agent Skills runtimes** (e.g. Codex) — clone into the runtime's skills folder, e.g. `~/.codex/skills/cs2-pickem`.
 
-Requirements: Python 3.8+ with `numpy`. `git` and access to GitHub are used to read Valve's official rankings (with a fallback to Liquipedia when GitHub is unreachable).
+Requirements: Python 3.8+ and `pip install -r requirements.txt` (only `numpy` is needed to use the skill; `scipy` is for recalibration). `git` and access to GitHub are used to read Valve's official rankings (with a fallback to Liquipedia when GitHub is unreachable).
 
 ## Use
 
@@ -43,7 +43,7 @@ In Claude Code you can also call it directly with `/cs2-pickem`.
 
 ### What you get
 
-A real card the model built for **Budapest Major 2025, Stage 3** in the backtest (rankings only, no research, no peeking at results):
+A real card the v0.1 model built for **Budapest Major 2025, Stage 3** in the backtest (rankings only, no research, no peeking at results):
 
 | Slot | Pick | Chance | Label | What happened |
 |---|---|---|---|---|
@@ -66,7 +66,7 @@ Predicted chance of 5+ correct: **39%**. Result: **5/10 — stage passed.** In a
 
 1. **Figure out the game and the event.** Valve Pick'Em slots (3-0 / advance / 0-3, playoff bracket) or a site predictor (match winners, who advances, champion, map score). Format of every stage and every match (Bo1/Bo3/Bo5), seeding.
 2. **Research.** Form over the last 2–3 months, roster changes and stand-ins, map pools, how each team got into the stage, news from HLTV, X and public Telegram channels, published Pick'Em cards of pros and analysts.
-3. **Model.** Team strength from the Valve Regional Standings (VRS) rank, calibrated on every match of the last three Majors, plus explicit, reasoned adjustments from the research.
+3. **Model.** Team strength from the Valve Regional Standings (VRS) rank, plus a recent-form correction from the skill's own Elo (built from ~36,000 matches in Valve's data and topped up with results Valve hasn't published yet), plus explicit, reasoned adjustments from the research. Announced roster changes add uncertainty even before the new lineup has played. Non-Major events are treated as slightly less predictable. Everything is calibrated on real matches and checked on data the model never saw.
 4. **Simulate.** Swiss stages with Valve's exact pairing rules, any bracket (GSL groups, single / double elimination), or single matches.
 5. **Optimise for the real goal.** For Valve Pick'Em that's *5+ correct out of 10*, not "most likely team in every slot" — the optimiser accounts for correlations (two favourites meeting in round 2 can't both go 3-0).
 
@@ -76,11 +76,20 @@ Honest numbers, all reproducible with `scripts/backtest.py` (each Major predicte
 
 | | Correct Swiss picks | Swiss stages passed (5+) | Playoff bracket picks |
 |---|---|---|---|
-| Model, rankings only | 37–41 / 90 | **5 / 9** | **11–12 / 21** |
+| Model (VRS rank + Elo form correction) | 37 / 90 | **5 / 9** | **11 / 21** |
 | "Pick by seed" baseline | 40 / 90 | 3 / 9 | 6 / 21 |
 
+How well it predicts single matches (log-loss, lower is better; a coin flip is 0.693), on data that was **not** used to fit the model:
+
+| | VRS rank only (v0.1) | + Elo form correction (v0.2) |
+|---|---|---|
+| LAN matches between top-20 teams, 2026 | 0.663 | **0.644** |
+| All 318 Major matches (leave-one-Major-out) | 0.649 | **0.647** |
+| Major Stage 3 matches | 0.635 | **0.618** |
+
 - **Majors are close to a lottery.** The higher-ranked team wins 58% of Bo1s and 65% of Bo3s. Stage 1 is the hardest (≈25% chance of 5+ even for the best card), Stage 3 the most predictable (40–60%).
-- On rankings alone the model doesn't pick more winners than seeding — its edge is building the card around the 5+ target and the playoffs. **The real edge has to come from research**, which can't be backtested without hindsight. That's why the skill keeps a prediction log: it records the rank-only and the researched probability before every match and reports which one was more accurate.
+- The automatic model doesn't pick more Swiss winners than seeding over 9 stages — its edge is building the card around the 5+ target and the playoffs. **The rest has to come from research**, which can't be backtested without hindsight. That's why the skill keeps a prediction log: it records the automatic and the researched probability before every match and reports which one was more accurate.
+- Every idea is tested before it ships. Some didn't make it: using Elo *instead* of VRS made Major predictions worse (Elo can't compare regions), and "punishing" teams after roster changes hurt accuracy. The full list is in [`references/calibration.md`](references/calibration.md).
 
 What *is* verified exactly: with Valve's seeding rule, the pairing engine reproduces **all 45 rounds of all 9 Swiss stages** of Austin 2025, Budapest 2025 and Cologne 2026 (297 matches). Details: [`references/calibration.md`](references/calibration.md).
 
@@ -98,21 +107,27 @@ The instructions (`SKILL.md`, `references/`) are in Russian; Claude answers in t
 
 | Script | What it does |
 |---|---|
+| `scripts/liquipedia_event.py` | A Liquipedia tournament page → participants and rosters, all matches, a Swiss stage file with live rounds, the playoff bracket |
+| `scripts/elo.py` | VRS rank, the skill's own Elo, the form correction `elo_adj`, fresh matches (`--extra`) and roster checks at any date; `--fill` writes them into a stage file |
 | `scripts/vrs_ranks.py` | VRS rank and points for any team at any date, from Valve's official repository |
 | `scripts/model.py` | Shared calibrated strength model (the only place constants live) |
 | `scripts/swiss_sim.py` | 16-team Swiss: simulation, optimal Pick'Em card, live mode, final standings and next-stage seeds |
 | `scripts/playoffs_sim.py` | Exact Major playoff odds and the best consistent bracket |
-| `scripts/bracket_sim.py` | Any bracket: GSL groups, single / double elimination, custom graphs |
+| `scripts/bracket_sim.py` | Any bracket: GSL groups, single / double elimination, Valve/PGL playoffs (`pgl8`), custom graphs |
 | `scripts/predict.py` | Per-match probabilities and the prediction log (`probs`, `result`, `score`) |
 | `scripts/calibrate.py` | Rebuilds the Major match dataset and refits the model |
 | `scripts/backtest.py` | Leave-one-Major-out backtest of cards and brackets |
 
 ```bash
-python3 scripts/vrs_ranks.py --date 2026-11-02 Vitality "Natus Vincere" FURIA
+python3 scripts/liquipedia_event.py "PGL/2026/Masters" --out event/     # page title from the Liquipedia URL
+python3 scripts/elo.py --date 2026-11-25 Vitality "Natus Vincere" FURIA
+python3 scripts/elo.py --date 2026-11-25 --fill stage.json --extra fresh.json
 python3 scripts/swiss_sim.py assets/example_stage3_cologne2026.json --sims 20000
 python3 scripts/bracket_sim.py --template gsl4 --teams A B C D > group.json
 python3 scripts/predict.py probs matches.json --log predictions.json
+python3 scripts/predict.py results predictions.json event/matches.json
 python3 scripts/predict.py score predictions.json
+python3 scripts/swiss_sim.py event/swiss_1.json --playoffs        # champion odds during the Swiss
 ```
 
 ### Repository layout
@@ -139,7 +154,7 @@ Contributions are very welcome — especially after each Major.
 - **Prediction logs.** If you used the skill on a real event, share your `predictions.json` (or the `score` table). This is the only honest test of the research layer.
 - **Format notes.** Organiser-specific Swiss rules, seeding quirks, new predictor sites (free ones only) → `references/tournament_formats.md`.
 - **Sources.** Reliable X accounts, Telegram channels and sites → `references/research_playbook.md`.
-- **Code.** Keep the scripts dependency-light (standard library + numpy). Any change to the model or the pairing engine must keep `backtest.py` reporting `pairings reproduced=yes` for every stage; mention the before/after numbers in the PR.
+- **Code.** Keep the scripts dependency-light (standard library + numpy). Run `python3 tests/run_tests.py` before a PR. Any change to the model or the pairing engine must keep `backtest.py` reporting `pairings reproduced=yes` for every stage; mention the before/after numbers in the PR.
 
 Please open an issue first for larger changes.
 

@@ -1,0 +1,10 @@
+==Playoffs==
+{{Bracket|Bracket/8|id=PO
+|R1M1={{Match|opponent1={{TeamOpponent|}}|opponent2={{TeamOpponent|}}|bestof=3}}
+|R1M2={{Match|opponent1={{TeamOpponent|}}|opponent2={{TeamOpponent|}}|bestof=3}}
+|R1M3={{Match|opponent1={{TeamOpponent|}}|opponent2={{TeamOpponent|}}|bestof=3}}
+|R1M4={{Match|opponent1={{TeamOpponent|}}|opponent2={{TeamOpponent|}}|bestof=3}}
+|R2M1={{Match|bestof=3}}
+|R2M2={{Match|bestof=3}}
+|R3M1={{Match|bestof=5}}
+}}

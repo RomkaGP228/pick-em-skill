@@ -16,19 +16,23 @@ record, Buchholz, seed — no priority table) and "round1": "1v16" when the orga
 Strength model: scripts/model.py (calibrated on 318 Major matches, see references/calibration.md).
 
 Usage:
-  python swiss_sim.py input.json [--sims 20000] [--json out.json] [--seed 42]
+  python swiss_sim.py input.json [--sims 20000] [--json out.json] [--seed 42] [--playoffs [FINAL_BO]]
 
 Input JSON:
 {
   "stage": "Stage 1",
   "format": "standard",                 # or "all_bo3" / "all_bo1"
+  "event_type": "major",                # or "other": non-Major events are a bit less predictable
+  "rating_sd": 0,                       # optional global rating uncertainty (robustness checks)
   "pairing": "valve",                   # or "high_low" for non-Major Swiss events
   "round1": "1v9",                      # or "1v16"
   "bo1_shrink": 0.8,                    # how much Bo1 pulls map odds toward 50/50
   "advance_counts_3_0": false,          # Pick'Em rule: does a 3-0 team in an advance slot count?
   "teams": [                            # in INITIAL SEED order (seed 1 first)
      {"name": "Vitality", "rank": 1},              # global VRS rank (recommended base)
-     {"name": "NAVI", "rank": 5, "adj": -20},     # adj = manual tweak with a stated reason
+     {"name": "NAVI", "rank": 5, "elo_adj": 35, "adj": -20, "sd": 40},
+                       # elo_adj from scripts/elo.py; adj = manual research tweak with a reason;
+                       # sd = extra rating uncertainty (e.g. roster change in the last ~5 matches)
      {"name": "TeamX", "vrs_points": 1650},       # alternative base
      {"name": "TeamY", "rating": 1580},           # explicit rating
      ...
@@ -54,8 +58,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     import numpy as np
 except ImportError:  # pragma: no cover
-    print("numpy is required: pip install numpy", file=sys.stderr)
-    raise
+    sys.exit("swiss_sim.py needs numpy: pip install numpy  (or: pip install -r requirements.txt)")
 
 PRIORITY_TABLE_6 = [
     [(1, 6), (2, 5), (3, 4)],
@@ -102,7 +105,8 @@ class Stage:
         if self.round1 not in ("1v9", "1v16"):
             raise ValueError("round1 must be 1v9 | 1v16")
         self.bo1_shrink = float(cfg.get("bo1_shrink", BO1_SHRINK))
-        self.model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), self.bo1_shrink)
+        self.model = Ratings(cfg["teams"], cfg.get("map_prob_overrides"), self.bo1_shrink,
+                             event_type=cfg.get("event_type", "major"), rating_sd=cfg.get("rating_sd", 0))
         self.rating = self.model.r
         self.live_rounds = cfg.get("rounds") or []
         for rnd in self.live_rounds:
@@ -224,13 +228,44 @@ class Stage:
         return sorted(self.teams, key=lambda t: (-(W[t] - L[t]), -self.buchholz(t, W, L, opps), self.seed[t])), out
 
 
-def run_sims(stage, n, seed=None):
+def simulate_playoffs(stage, order, rng, final_bo):
+    """8-team single elimination seeded by Swiss standings: QF 1v8, 4v5 | 2v7, 3v6; SF; final.
+    Same bracket as Valve Majors and PGL events. Returns (QF winners, finalists, champion)."""
+    s = order[:8]
+    def play(a, b, bo):
+        return a if rng.random() < stage.model.p_series(a, b, bo) else b
+    q = [play(s[0], s[7], 3), play(s[3], s[4], 3), play(s[1], s[6], 3), play(s[2], s[5], 3)]
+    f = [play(q[0], q[1], 3), play(q[2], q[3], 3)]
+    return q, f, play(f[0], f[1], final_bo)
+
+
+def run_sims(stage, n, seed=None, playoffs=None):
+    """playoffs: None or final-series length (e.g. 5) to also simulate the 8-team playoffs."""
     rng = random.Random(seed)
     cats = np.zeros((n, 16), dtype=np.int8)
+    noisy = stage.model.noisy
+    po = {t: [0, 0, 0, 0] for t in stage.teams}   # made playoffs, won QF, reached final, champion
     for s in range(n):
-        res = stage.simulate_once(rng)
+        if noisy:
+            stage.model.redraw(rng)
+        res, W, L, opps = stage.simulate_once(rng, details=True)
         for j, t in enumerate(stage.teams):
             cats[s, j] = CAT_INDEX[res[t]]
+        if playoffs:
+            order = sorted([t for t in stage.teams if W[t] == 3],
+                           key=lambda t: (-(W[t] - L[t]), -stage.buchholz(t, W, L, opps), stage.seed[t]))
+            q, f, champ = simulate_playoffs(stage, order, rng, playoffs)
+            for t in order[:8]:
+                po[t][0] += 1
+            for t in q:
+                po[t][1] += 1
+            for t in f:
+                po[t][2] += 1
+            po[champ][3] += 1
+    if noisy:
+        stage.model.r.update(stage.model.base)
+    if playoffs:
+        return cats, {t: [v / n for v in c] for t, c in po.items()}
     return cats
 
 
@@ -352,6 +387,9 @@ def main():
     ap.add_argument("--sims", type=int, default=None)
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--json", default=None, help="write full results JSON here")
+    ap.add_argument("--playoffs", type=int, nargs="?", const=5, default=None, metavar="FINAL_BO",
+                    help="also simulate the 8-team playoffs seeded by the Swiss standings "
+                         "(QF 1v8, 4v5, 2v7, 3v6; Bo3; final Bo5 unless given) -> champion odds")
     args = ap.parse_args()
 
     with open(args.input, encoding="utf-8") as f:
@@ -369,7 +407,11 @@ def main():
         print("\nNext stage seeds 9-16 (advancing teams in order): " + ", ".join(adv))
         return
     n = args.sims or int(cfg.get("n_sims", 20000))
-    cats = run_sims(stage, n, args.seed)
+    po = None
+    if args.playoffs:
+        cats, po = run_sims(stage, n, args.seed, playoffs=args.playoffs)
+    else:
+        cats = run_sims(stage, n, args.seed)
     teams = stage.teams
 
     probs = {}
@@ -402,10 +444,17 @@ def main():
     dist = best["distribution"]
     print("Distribution of correct picks: " +
           ", ".join(f"{k}:{v:.0%}" for k, v in enumerate(dist) if v >= 0.005))
+    if po:
+        print(f"\n### Playoffs (8 teams seeded by Swiss standings, final Bo{args.playoffs})\n")
+        print("| Team | Playoffs | Win QF | Final | Champion |")
+        print("|---|---|---|---|---|")
+        for t in sorted(teams, key=lambda x: -po[x][3]):
+            if po[t][0] >= 0.005:
+                print(f"| {t} | {po[t][0]:.0%} | {po[t][1]:.0%} | {po[t][2]:.0%} | {po[t][3]:.0%} |")
 
     if args.json:
         with open(args.json, "w", encoding="utf-8") as f:
-            json.dump({"stage": cfg.get("stage"), "n_sims": n, "format": stage.fmt,
+            json.dump({"stage": cfg.get("stage"), "n_sims": n, "format": stage.fmt, "playoffs": po,
                        "ratings": stage.rating, "probs": probs, "best_card": best,
                        "tiers": {slot: {t: tier(slot, probs[t]["3-0" if slot == "3-0" else
                                                             "0-3" if slot == "0-3" else "advance_slot"])
