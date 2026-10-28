@@ -11,6 +11,9 @@ Two numbers per match:
 Subcommands:
   python predict.py probs input.json [--log predictions.json]
   python predict.py result predictions.json <match_id> <winner> [--event "IEM X"]
+  python predict.py results predictions.json matches.json [--event "IEM X"] [--dry-run]
+        # many results at once: matches.json from liquipedia_event.py (or the fresh-matches
+        # format: team1, team2, winner or score, date); matched to open predictions by team pair
   python predict.py score predictions.json [--event "IEM X"]
   python predict.py pending predictions.json
 
@@ -35,6 +38,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from model import Ratings  # noqa: E402
+from vrs_ranks import core  # noqa: E402
 
 
 def confidence(p):
@@ -129,6 +133,61 @@ def cmd_result(a):
     print(f"{p['a']} vs {p['b']}: winner {a.winner} (pick was {p['pick']} — {'верно' if p['pick'] == a.winner else 'мимо'})")
 
 
+def cmd_results(a):
+    log = load_log(a.log)
+    raw = json.load(open(a.matches, encoding="utf-8"))
+    items = raw.get("matches", []) if isinstance(raw, dict) else raw
+    preds = [p for p in log["predictions"] if not a.event or p["event"] == a.event]
+    updated, same, conflicts, unmatched = 0, 0, [], []
+    for it in items:
+        t1, t2 = it.get("team1"), it.get("team2")
+        win = it.get("winner")
+        if not win and it.get("score"):
+            try:
+                s1, s2 = [int(x) for x in str(it["score"]).replace(":", "-").split("-")[:2]]
+                win = t1 if s1 > s2 else t2 if s2 > s1 else None
+            except ValueError:
+                win = None
+        if not (t1 and t2 and win):
+            continue
+        pair = {core(t1), core(t2)}
+        cands = [p for p in preds if {core(p["a"]), core(p["b"])} == pair]
+        if not cands:
+            unmatched.append(f"{t1} vs {t2}")
+            continue
+        open_c = [p for p in cands if not p.get("winner")] or cands
+        if it.get("date"):
+            def gap(p):
+                if not p.get("date"):
+                    return 0
+                return abs((dt.date.fromisoformat(p["date"]) - dt.date.fromisoformat(it["date"])).days)
+            open_c.sort(key=gap)
+            if open_c[0].get("date") and gap(open_c[0]) > 1:
+                unmatched.append(f"{t1} vs {t2} ({it['date']}: no prediction within a day)")
+                continue
+        p = open_c[0]
+        w = p["a"] if core(win) == core(p["a"]) else p["b"]
+        if p.get("winner"):
+            if p["winner"] == w:
+                same += 1
+            else:
+                conflicts.append(f"{p['id']}: log says {p['winner']}, file says {w}")
+            continue
+        if not a.dry_run:
+            p["winner"] = w
+        updated += 1
+    if not a.dry_run:
+        save_log(a.log, log)
+    print(f"{'Would update' if a.dry_run else 'Updated'}: {updated}; already recorded: {same}; "
+          f"results without a prediction: {len(unmatched)}; conflicts: {len(conflicts)}")
+    for c in conflicts:
+        print("CONFLICT " + c)
+    if unmatched:
+        print("No prediction for: " + "; ".join(unmatched[:12]) + (" ..." if len(unmatched) > 12 else ""))
+    pending = [p for p in preds if not p.get("winner")]
+    print(f"Predictions still without a result: {len(pending)}")
+
+
 def metrics(rows, key):
     y = [1.0 if r["winner"] == r["a"] else 0.0 for r in rows]
     q = [min(max(r[key], 1e-6), 1 - 1e-6) for r in rows]
@@ -184,10 +243,13 @@ def main():
     p = sub.add_parser("probs"); p.add_argument("input"); p.add_argument("--log")
     p = sub.add_parser("result"); p.add_argument("log"); p.add_argument("match_id"); p.add_argument("winner")
     p.add_argument("--event")
+    p = sub.add_parser("results"); p.add_argument("log"); p.add_argument("matches"); p.add_argument("--event")
+    p.add_argument("--dry-run", action="store_true")
     p = sub.add_parser("score"); p.add_argument("log"); p.add_argument("--event")
     p = sub.add_parser("pending"); p.add_argument("log")
     a = ap.parse_args()
-    {"probs": cmd_probs, "result": cmd_result, "score": cmd_score, "pending": cmd_pending}[a.cmd](a)
+    {"probs": cmd_probs, "result": cmd_result, "results": cmd_results, "score": cmd_score,
+     "pending": cmd_pending}[a.cmd](a)
 
 
 if __name__ == "__main__":

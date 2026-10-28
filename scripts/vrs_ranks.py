@@ -65,7 +65,6 @@ ALIASES = {
     "mongolz": "themongolz", "tmz": "themongolz", "vp": "virtuspro", "gl": "gamerlegion",
     "pua": "passionua", "lvg": "lynnvision", "lynnvisiongaming": "lynnvision",
     "faze": "faze", "fazeclan": "faze", "gaiminggladiators": "gaimingladiators",
-    "1w": "1win", "1wteam": "1win",
 }
 
 

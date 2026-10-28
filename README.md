@@ -28,7 +28,7 @@ For a single project, clone into `.claude/skills/cs2-pickem` inside that reposit
 
 **Other Agent Skills runtimes** (e.g. Codex) — clone into the runtime's skills folder, e.g. `~/.codex/skills/cs2-pickem`.
 
-Requirements: Python 3.8+ with `numpy`. `git` and access to GitHub are used to read Valve's official rankings (with a fallback to Liquipedia when GitHub is unreachable).
+Requirements: Python 3.8+ and `pip install -r requirements.txt` (only `numpy` is needed to use the skill; `scipy` is for recalibration). `git` and access to GitHub are used to read Valve's official rankings (with a fallback to Liquipedia when GitHub is unreachable).
 
 ## Use
 
@@ -107,23 +107,27 @@ The instructions (`SKILL.md`, `references/`) are in Russian; Claude answers in t
 
 | Script | What it does |
 |---|---|
+| `scripts/liquipedia_event.py` | A Liquipedia tournament page → participants and rosters, all matches, a Swiss stage file with live rounds, the playoff bracket |
 | `scripts/elo.py` | VRS rank, the skill's own Elo, the form correction `elo_adj`, fresh matches (`--extra`) and roster checks at any date; `--fill` writes them into a stage file |
 | `scripts/vrs_ranks.py` | VRS rank and points for any team at any date, from Valve's official repository |
 | `scripts/model.py` | Shared calibrated strength model (the only place constants live) |
 | `scripts/swiss_sim.py` | 16-team Swiss: simulation, optimal Pick'Em card, live mode, final standings and next-stage seeds |
 | `scripts/playoffs_sim.py` | Exact Major playoff odds and the best consistent bracket |
-| `scripts/bracket_sim.py` | Any bracket: GSL groups, single / double elimination, custom graphs |
+| `scripts/bracket_sim.py` | Any bracket: GSL groups, single / double elimination, Valve/PGL playoffs (`pgl8`), custom graphs |
 | `scripts/predict.py` | Per-match probabilities and the prediction log (`probs`, `result`, `score`) |
 | `scripts/calibrate.py` | Rebuilds the Major match dataset and refits the model |
 | `scripts/backtest.py` | Leave-one-Major-out backtest of cards and brackets |
 
 ```bash
+python3 scripts/liquipedia_event.py "PGL/2026/Masters/Bucharest" --out event/
 python3 scripts/elo.py --date 2026-11-25 Vitality "Natus Vincere" FURIA
 python3 scripts/elo.py --date 2026-11-25 --fill stage.json --extra fresh.json
 python3 scripts/swiss_sim.py assets/example_stage3_cologne2026.json --sims 20000
 python3 scripts/bracket_sim.py --template gsl4 --teams A B C D > group.json
 python3 scripts/predict.py probs matches.json --log predictions.json
+python3 scripts/predict.py results predictions.json event/matches.json
 python3 scripts/predict.py score predictions.json
+python3 scripts/swiss_sim.py event/swiss_1.json --playoffs        # champion odds during the Swiss
 ```
 
 ### Repository layout
@@ -150,7 +154,7 @@ Contributions are very welcome — especially after each Major.
 - **Prediction logs.** If you used the skill on a real event, share your `predictions.json` (or the `score` table). This is the only honest test of the research layer.
 - **Format notes.** Organiser-specific Swiss rules, seeding quirks, new predictor sites (free ones only) → `references/tournament_formats.md`.
 - **Sources.** Reliable X accounts, Telegram channels and sites → `references/research_playbook.md`.
-- **Code.** Keep the scripts dependency-light (standard library + numpy). Any change to the model or the pairing engine must keep `backtest.py` reporting `pairings reproduced=yes` for every stage; mention the before/after numbers in the PR.
+- **Code.** Keep the scripts dependency-light (standard library + numpy). Run `python3 tests/run_tests.py` before a PR. Any change to the model or the pairing engine must keep `backtest.py` reporting `pairings reproduced=yes` for every stage; mention the before/after numbers in the PR.
 
 Please open an issue first for larger changes.
 

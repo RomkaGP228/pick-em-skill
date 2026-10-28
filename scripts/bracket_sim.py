@@ -12,6 +12,8 @@ Usage:
   python bracket_sim.py --template single_elim --teams A B C D E F G H [--bo 3 --final-bo 5]
   python bracket_sim.py --template gsl4 --teams A B C D [--bo 3]
   python bracket_sim.py --template double_elim8 --teams A B C D E F G H [--bo 3 --final-bo 3]
+  python bracket_sim.py --template pgl8 --teams S1 S2 S3 S4 S5 S6 S7 S8   # Valve/PGL playoffs, seeds
+      from the Swiss final standings (swiss_sim.py prints them); QF 1v8, 4v5, 2v7, 3v6; final Bo5
       (templates print a ready input JSON; add ranks/adj, then run it)
 
 Input JSON:
@@ -96,7 +98,20 @@ def tpl_double_elim8(teams, bo=3, final_bo=None):
                        "4th": ["L:LR3"], "5-6th": ["L:LR2a", "L:LR2b"], "7-8th": ["L:LR1a", "L:LR1b"]}}
 
 
-TEMPLATES = {"single_elim": tpl_single_elim, "gsl4": tpl_gsl4, "double_elim8": tpl_double_elim8}
+def tpl_pgl8(teams, bo=3, final_bo=None):
+    """8 teams in Swiss final-standings order (seed 1 first). Valve Major / PGL playoffs:
+    QF 1v8, 4v5 (top half), 2v7, 3v6 (bottom half); semis within halves; final Bo5 by default."""
+    s = teams
+    return {"matches": [
+        {"id": "QF1", "a": s[0], "b": s[7], "bo": bo}, {"id": "QF2", "a": s[3], "b": s[4], "bo": bo},
+        {"id": "QF3", "a": s[1], "b": s[6], "bo": bo}, {"id": "QF4", "a": s[2], "b": s[5], "bo": bo},
+        {"id": "SF1", "a": "W:QF1", "b": "W:QF2", "bo": bo}, {"id": "SF2", "a": "W:QF3", "b": "W:QF4", "bo": bo},
+        {"id": "GF", "a": "W:SF1", "b": "W:SF2", "bo": final_bo or 5}],
+        "placements": {"Champion": ["W:GF"], "Runner-up": ["L:GF"], "Semifinal": ["L:SF1", "L:SF2"]}}
+
+
+TEMPLATES = {"single_elim": tpl_single_elim, "gsl4": tpl_gsl4, "double_elim8": tpl_double_elim8,
+             "pgl8": tpl_pgl8, "valve8": tpl_pgl8}
 
 
 # ---------------------------------------------------------------- simulation
@@ -187,6 +202,8 @@ def main():
             sys.exit("gsl4 needs exactly 4 teams (seed order 1,2,3,4: openers 1v4, 2v3)")
         if a.template == "double_elim8" and len(a.teams) != 8:
             sys.exit("double_elim8 needs exactly 8 teams (pairs 1-2, 3-4, 5-6, 7-8 in bracket order)")
+        if a.template in ("pgl8", "valve8") and len(a.teams) != 8:
+            sys.exit("pgl8 needs exactly 8 teams in Swiss final-standings order (seed 1 first)")
         body = TEMPLATES[a.template](a.teams, **kw)
         cfg = {"event": "", "event_type": "other", "teams": [{"name": t, "rank": None} for t in a.teams],
                "map_prob_overrides": {}, **body, "results": {}}

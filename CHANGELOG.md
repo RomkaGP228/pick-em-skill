@@ -7,17 +7,28 @@ Sections: **Added**, **Changed**, **Fixed**, **Removed**, and **Data** (new Majo
 
 ## [Unreleased]
 
-Fixes from running 0.3.0 on PGL Masters Bucharest 2026. Backtest unchanged (Swiss 37/90, 5/9 stages; playoffs 11/21).
+## [0.4.0] - 2026-10-28
+
+Tooling release after the PGL Bucharest 2026 test; it also ships the unreleased 0.2.0 and 0.3.0 model updates below. Compared with 0.3.0 the model is unchanged: every proposed change was backtested and none beat the current settings on held-out data (see `references/calibration.md`).
 
 ### Added
-- `scripts/liquipedia_fresh.py`: collects the fresh matches for `elo.py --extra` from Liquipedia team match pages through the MediaWiki API (the web pages return 403 to automated fetches). Respects the 1 request / 30 s limit, caches pages, retries truncated responses, de-duplicates series listed on both teams' pages.
+- `scripts/liquipedia_event.py`: a Liquipedia tournament page (via api.php, 1–3 requests, 30 s throttle, cached) → `event.json` (participants with rosters, all matches with map scores), `matches.json` (for `elo.py --extra` and the prediction log), `swiss_N.json` (seeds, rosters, played rounds for live mode; the pairing rule is verified against the played rounds; 1v9 / 1v16 detected), `playoffs.json`. Re-running after a match day keeps ranks, `elo_adj`, manual adjustments and locked picks. Works offline with `--wikitext`.
+- `predict.py results`: import many results at once (matched by team pair and date, idempotent, `--dry-run`).
+- `swiss_sim.py --playoffs [FINAL_BO]`: champion / finalist odds from the Swiss simulation (8-team bracket seeded by the Swiss standings).
+- `bracket_sim.py --template pgl8`: Valve Major / PGL Masters playoffs (QF 1v8, 4v5, 2v7, 3v6; final Bo5).
+- `elo.py`: "no matches for N days" warning (>30 days) and days since the last match in the table.
+- `requirements.txt`; offline test suite `tests/run_tests.py` (runs in the release workflow).
+- Playbook: Liquipedia access notes (web pages often 403, api.php ~1 request / 30 s).
 
-### Fixed
-- `elo.py --extra`: a fresh match went to an old history entity with the same spelling instead of the ranked team ("BetBoom" → old BetBoom, not today's BETBOOM #11), silently and without a warning. An exact VRS-table name now wins over a history name; partial table matches still come after it.
-- Roster check compared the tournament roster only with the last match's roster, so a recent stand-in (jL for Vitality, 10 matches in Aug–Sep) was flagged as a new signing and got `sd 40`. A player now counts as new only if he played none of the team's last 10 matches (`RECENT_ROSTERS`).
-- Alias "1w" / "1w Team" → 1win.
+### Changed
+- Clear error messages: `swiss_sim.py` without numpy; a team without a VRS rank.
 
-## [0.3.0] - 2026-10-27
+### Tested, not adopted
+- Non-Major scale: re-fitted values (0.87–1.02) were not better than 0.9 on held-out 2026 data; no overconfidence found on 746 held-out LAN matches.
+- Separate scale for S-tier events with top-16 teams: no held-out improvement.
+- Extra uncertainty after long breaks (21–60 days): no effect on accuracy.
+
+## 0.3.0 - 2026-10-27 (not released separately; included in 0.4.0)
 
 Second round of fixes from the PGL Bucharest 2026 test, released together with the 0.2.0 model update below. Each point was backtested; see `references/calibration.md`.
 
@@ -35,7 +46,7 @@ Second round of fixes from the PGL Bucharest 2026 test, released together with t
 - Extra weight on recent matches (higher K, rating decay): worse at Majors or everywhere.
 - Map-score weighting and automatic map pools: no map data to calibrate them yet.
 
-## 0.2.0 - 2026-10-27 (not released separately; included in 0.3.0)
+## 0.2.0 - 2026-10-27 (not released separately; included in 0.4.0)
 
 Model update after a live test on PGL Bucharest 2026. Every change was tested on data the model never saw; ideas that didn't help were dropped (see `references/calibration.md`).
 
@@ -73,6 +84,6 @@ First public beta.
 - Strength model calibrated on them (leave-one-Major-out): `rating = 1700 − 90·ln(VRS rank)`, Bo1 shrink 0.8.
 - Seeding rule verified: the pairing engine reproduces all 45 rounds of all 9 Swiss stages.
 
-[Unreleased]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.1.0...v0.3.0
+[Unreleased]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.1.0...v0.4.0
 [0.1.0]: https://github.com/RomkaGP228/pick-em-skill/releases/tag/v0.1.0

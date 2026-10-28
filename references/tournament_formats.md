@@ -3,6 +3,7 @@
 Мейджор — частный случай. Для остальных турниров (IEM, BLAST, PGL, ESL Pro League, CCT и т. д.) формат собирается из нескольких «кубиков», и у каждого организатора свои правила. Поэтому формат **всегда берётся из источника турнира**, а не по памяти.
 
 ## 1. Где смотреть
+- **Сначала `scripts/liquipedia_event.py "<страница турнира>" --out event/`**: участники, матчи, файл Swiss-стадии и сетка плей-офф за 1–3 запроса к api.php (подробности и ограничения доступа — `research_playbook.md`).
 - **Liquipedia**, страница турнира, разделы *Format* и *Participants*: стадии, Bo каждого матча, правила посева, кто куда приглашён. Если есть отдельные страницы стадий (`/Group_Stage`, `/Playoffs`), бери сетку оттуда.
 - **HLTV**, страница события: участники, расписание, сыгранные матчи.
 - Официальный сайт или рулбук организатора — если на Liquipedia формат описан неполно.
@@ -18,6 +19,7 @@
 | Swiss 16 команд, правила организатора | «Buchholz & initial seeds», иногда 1v16 в первом раунде, часто все Bo3 | `swiss_sim.py` с `pairing: high_low`, `round1: 1v16`, `format: all_bo3` — **приближённо**, предупреди пользователя |
 | GSL-группа на 4 (openers 1v4, 2v3 → winners/elimination → decider) | «GSL», «double-elimination group of 4» | `bracket_sim.py --template gsl4` |
 | Single elimination (4/8/16 команд) | «single-elimination bracket» | `bracket_sim.py --template single_elim` (или `playoffs_sim.py` для сетки мейджора) |
+| Плей-офф на 8 по итогам Swiss (мейджоры, PGL Masters) | четвертьфиналы 1–8, 4–5, 2–7, 3–6; финал Bo5 | `bracket_sim.py --template pgl8` или `swiss_sim.py --playoffs` (шансы на чемпионство ещё по ходу Swiss) |
 | Double elimination на 8 | upper/lower bracket | `bracket_sim.py --template double_elim8`; другие размеры — описать матчи вручную |
 | Плей-офф с «байами» (часть команд стартует с полуфинала), групповая сетка нестандартного вида | Liquipedia, схема сетки | `bracket_sim.py` с вручную описанными матчами (`W:`/`L:` ссылки) |
 | Круговой турнир / группы round robin | «round robin» | `predict.py` для каждого матча (симулятор не нужен, если предиктор просит победителей матчей) |

@@ -80,7 +80,8 @@ def base_rating(team):
     elif "vrs_points" in team:
         r = rating_from_vrs(team["vrs_points"])
     else:
-        raise ValueError(f"Team {team.get('name')} needs 'rank', 'vrs_points' or 'rating'")
+        raise ValueError(f"Team '{team.get('name')}' has no 'rank' (elo.py could not find it in VRS?). "
+                     "Set 'rank' by hand (VRS rank; ~60 for a team outside the published list) or 'rating'.")
     return r + float(team.get("elo_adj", 0) or 0)
 
 

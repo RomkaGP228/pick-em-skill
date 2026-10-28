@@ -49,7 +49,7 @@ import re
 import subprocess
 import sys
 import tempfile
-from collections import defaultdict, deque
+from collections import defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -57,7 +57,6 @@ from model import elo_adjustment, elo_alpha  # noqa: E402
 from vrs_ranks import ensure_repo, match as match_name, norm, core  # noqa: E402
 
 ELO = {"K": 32.0, "online_weight": 1.0, "init": 1400.0, "event_weight_pow": 0.5}
-RECENT_ROSTERS = 10  # roster check: players seen in the team's last N matches are not "new"
 ROW = re.compile(r"^\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d{4}-\d\d-\d\d)\s*\|\s*([^|]+?)\s*\|\s*([WL])\s*\|"
                  r"\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|")
 
@@ -147,13 +146,6 @@ def _canon_factory(table, hist_names):
     unknown = set()
 
     def canon(name):
-        # An exact (case/punctuation-insensitive) VRS-table name goes first: the history also holds
-        # old entities with the same spelling ("BetBoom" vs today's "BETBOOM"), and fresh matches
-        # must reach the ranked team. Partial table matches only after an exact history name.
-        n = norm(name)
-        exact = [r for r in table if norm(r[2]) == n]
-        if exact:
-            return exact[0][2]
         if name in hist_names:
             return name
         row = match_name(name, table)
@@ -213,11 +205,9 @@ def load_extra(paths, table, history):
 def run_elo(history, before_date):
     """Elo after all matches strictly before `before_date`.
     Returns ratings, matches played, matches since last roster change, last match date,
-    last known roster, per team (number of fresh/extra matches, last fresh date), and the rosters
-    of each team's last RECENT_ROSTERS matches (for the tournament roster check)."""
+    last known roster, and per team (number of fresh/extra matches, last fresh date)."""
     R, roster, n, since = {}, {}, defaultdict(int), defaultdict(lambda: 99)
     last, fresh = {}, defaultdict(lambda: [0, None])
-    recent = defaultdict(lambda: deque(maxlen=RECENT_ROSTERS))
     for m in history:
         if m["date"] >= before_date:
             break
@@ -229,7 +219,6 @@ def run_elo(history, before_date):
                 if old is not None and set(ro) - set(old):
                     since[t] = 0
                 roster[t] = ro
-                recent[t].append(ro)
         ea = 1 / (1 + 10 ** (-(R[a] - R[b]) / 400))
         w = 1.0 if m["lan"] else ELO["online_weight"]
         if m["ew"] is not None:
@@ -244,7 +233,7 @@ def run_elo(history, before_date):
             if m.get("extra"):
                 fresh[t][0] += 1
                 fresh[t][1] = m["date"]
-    return R, n, since, last, roster, fresh, recent
+    return R, n, since, last, roster, fresh
 
 
 # ------------------------------------------------------------------ VRS rank at date
@@ -270,29 +259,34 @@ def table_alpha(table, R):
     return elo_alpha([(r[0], R.get(r[2])) for r in table])
 
 
-def roster_check(entry_roster, recent_rosters):
-    """Players in the tournament roster that played none of the team's last RECENT_ROSTERS matches.
-    A player who stood in a few weeks ago (jL for Vitality) is not a new signing."""
-    if not entry_roster or not recent_rosters:
+def roster_check(entry_roster, known):
+    """Players in the tournament roster that were not in the last roster seen in the data."""
+    if not entry_roster or not known:
         return None
-    k = {norm(p) for ro in recent_rosters for p in ro}
+    k = {norm(p) for p in known}
     return [p for p in entry_roster if norm(p) not in k]
 
 
-def describe(name, table, st, event_type, entry_roster=None):
-    R, n, since, last, roster, fresh, recent, alpha = st
+IDLE_WARN_DAYS = 30
+
+
+def describe(name, table, st, event_type, entry_roster=None, ref_date=None):
+    R, n, since, last, roster, fresh, alpha = st
     row = match_name(name, table)
     vname = row[2] if row else None
     rank = row[0] if row else None
     elo = R.get(vname) if vname else None
     rc = since.get(vname, 99) if vname else 99
-    new_players = roster_check(entry_roster, recent.get(vname)) if vname else None
+    lm = last.get(vname) if vname else None
+    idle = (dt.date.fromisoformat(ref_date) - dt.date.fromisoformat(lm)).days if (lm and ref_date) else None
+    new_players = roster_check(entry_roster, roster.get(vname)) if vname else None
     return {"name": name, "vrs_name": vname, "rank": rank, "vrs_points": row[1] if row else None,
             "elo": round(elo, 1) if elo is not None else None,
             "elo_adj": round(elo_adjustment(rank, elo, alpha, event_type), 1) if rank else 0.0,
             "matches": n.get(vname, 0) if vname else 0,
             "fresh_matches": fresh[vname][0] if vname in fresh else 0,
-            "last_match": last.get(vname) if vname else None,
+            "last_match": lm,
+            "days_without_match": idle,
             "since_roster_change": rc if rc < 99 else None,
             "known_roster": roster.get(vname) if vname else None,
             "new_players": new_players}
@@ -325,9 +319,9 @@ def main():
     snap, table = ranks_before(repo, a.date)
     extra, skipped = load_extra(a.extra, table, hist) if a.extra else ([], 0)
     allm = sorted(hist + extra, key=lambda m: m["date"])
-    R, n, since, last, roster, fresh, recent = run_elo(allm, a.date)
+    R, n, since, last, roster, fresh = run_elo(allm, a.date)
     alpha = table_alpha(table, R)
-    st = (R, n, since, last, roster, fresh, recent, alpha)
+    st = (R, n, since, last, roster, fresh, alpha)
     extra_end = max((m["date"] for m in extra if m["date"] < a.date), default=None)
     print(f"# VRS snapshot {snap}; VRS match data until {vrs_end}"
           + (f"; + {len(extra)} fresh matches until {extra_end} ({skipped} duplicates skipped)" if extra else
@@ -344,7 +338,7 @@ def main():
     if cfg is not None:
         rows = []
         for t in cfg["teams"]:
-            d = describe(t["name"], table, st, event_type, t.get("roster") or rosters.get(t["name"]))
+            d = describe(t["name"], table, st, event_type, t.get("roster") or rosters.get(t["name"]), a.date)
             if d["rank"] is None:
                 print(f"WARNING: '{t['name']}' not found in VRS — set rank manually", file=sys.stderr)
             else:
@@ -365,20 +359,25 @@ def main():
         json.dump(cfg, open(a.fill, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
         print(f"# wrote rank + elo_adj{' + sd' if notes else ''} into {a.fill} (event_type={event_type})", file=sys.stderr)
     elif a.top:
-        rows = [describe(r[2], table, st, event_type) for r in table[:a.top]]
+        rows = [describe(r[2], table, st, event_type, None, a.date) for r in table[:a.top]]
     else:
         if not a.teams:
             ap.error("give team names, --fill or --top")
-        rows = [describe(t, table, st, event_type, rosters.get(t)) for t in a.teams]
+        rows = [describe(t, table, st, event_type, rosters.get(t), a.date) for t in a.teams]
         for d in rows:
             if d["new_players"]:
                 notes.append(f"{d['name']}: new in roster vs data: {', '.join(d['new_players'])} -> consider sd 40")
 
+    for d in rows:
+        if d["days_without_match"] is not None and d["days_without_match"] > IDLE_WARN_DAYS:
+            notes.append(f"{d['name']}: no matches for {d['days_without_match']} days (last {d['last_match']}) — "
+                         "check for roster news and results missing from the data; no automatic penalty "
+                         "(backtest: inactivity alone did not change accuracy)")
     if a.json:
         print(json.dumps({"vrs_snapshot": snap, "vrs_data_until": vrs_end, "fresh_until": extra_end,
                           "event_type": event_type, "teams": rows, "notes": notes}, ensure_ascii=False, indent=2))
         return
-    print("| Team | VRS rank | Elo | elo_adj | Matches (fresh) | Last match | Since roster change |")
+    print("| Team | VRS rank | Elo | elo_adj | Matches (fresh) | Last match (days ago) | Since roster change |")
     print("|---|---|---|---|---|---|---|")
     for d in rows:
         rc = d["since_roster_change"]
@@ -387,7 +386,8 @@ def main():
             flag = f"new: {', '.join(d['new_players'])} ⚠"
         nm = d["name"] if d["vrs_name"] in (d["name"], None) else f"{d['name']} ({d['vrs_name']})"
         print(f"| {nm if d['vrs_name'] else d['name'] + ' — NOT FOUND'} | {d['rank'] or '—'} | {d['elo'] or '—'} | "
-              f"{d['elo_adj']:+.0f} | {d['matches']} ({d['fresh_matches']}) | {d['last_match'] or '—'} | {flag} |")
+              f"{d['elo_adj']:+.0f} | {d['matches']} ({d['fresh_matches']}) | {d['last_match'] or '—'}"
+              f"{'' if d['days_without_match'] is None else ' (' + str(d['days_without_match']) + ('d ⚠)' if d['days_without_match'] > IDLE_WARN_DAYS else 'd)')} | {flag} |")
     for line in notes:
         print(f"⚠ {line}")
     print(f"\nelo_adj: VRS top-20{' (+ ranks 21-50 at half weight, non-Major event)' if event_type == 'other' else ''}. "
