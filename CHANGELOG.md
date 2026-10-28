@@ -7,9 +7,25 @@ Sections: **Added**, **Changed**, **Fixed**, **Removed**, and **Data** (new Majo
 
 ## [Unreleased]
 
-## [0.4.0] - 2026-10-28
+## [0.4.1] - 2026-10-28
 
-Tooling release after the PGL Bucharest 2026 test; it also ships the unreleased 0.2.0 and 0.3.0 model updates below. Compared with 0.3.0 the model is unchanged: every proposed change was backtested and none beat the current settings on held-out data (see `references/calibration.md`).
+First release since 0.1.0. It ships everything from the unreleased 0.2.0, 0.3.0 and 0.4.0 below, plus fixes to the Liquipedia reader after a run on the real PGL Bucharest 2026 pages. The prediction model is the same as in 0.3.0; backtest numbers are unchanged (Swiss 37/90, 5/9 stages passed; playoffs 11/21).
+
+### Changed
+- `liquipedia_event.py` skips qualifier subpages by default (`--with-qualifiers` to include them).
+
+### Fixed
+- `liquipedia_event.py` on real pages (found on PGL Bucharest 2026):
+  - results are read when map scores exist only as halves, with overtimes up to `o4`, as forfeits (`score=FF` / `W`, `walkover=`), or without `finished=` once the maps are done (previously "0 finished");
+  - short team tags in matches (`vit`, `tl`, `mongolz`, `navi`, `dendele`…) are matched to participants, so these teams get rosters; unmatched tags are listed, `--team tag="Full Name"` fixes them by hand;
+  - `playoffs.json` for `Bracket/8`: read from Liquipedia, or seeded from the Swiss standings (1v8, 4v5, 2v7, 3v6) while the bracket is still TBD; `swiss_N.json` now has `final_standings`;
+  - Swiss seeds: Liquipedia lists round 1 in schedule order, not seed order (PGL Masters Bucharest 2026: FUT listed 1st, seeded 7th), so simulated rounds 2–5 and the final-standings tiebreaks used wrong seeds. Seeds now keep the round-1 pairs and sides from Liquipedia and are ordered by VRS rank on the newest snapshot before the event that reproduces the played rounds (both PGL Bucharest 2026 events: rounds 1–5 reproduced); before round 2 the newest snapshot is used and marked unverified. `--no-vrs` / `--vrs-repo PATH`. On PGL Masters Bucharest 2026 this changed the blind Swiss card (3-0: Spirit + Vitality instead of Spirit + FUT);
+  - a missing page gives a clear message instead of `StopIteration`;
+  - the example page in `SKILL.md` / README is `PGL/2026/Masters`.
+
+## 0.4.0 - 2026-10-28 (tagged in git, not released separately; included in 0.4.1)
+
+Tooling release after the PGL Bucharest 2026 test. Compared with 0.3.0 the model is unchanged: every proposed change was backtested and none beat the current settings on held-out data (see `references/calibration.md`).
 
 ### Added
 - `scripts/liquipedia_event.py`: a Liquipedia tournament page (via api.php, 1–3 requests, 30 s throttle, cached) → `event.json` (participants with rosters, all matches with map scores), `matches.json` (for `elo.py --extra` and the prediction log), `swiss_N.json` (seeds, rosters, played rounds for live mode; the pairing rule is verified against the played rounds; 1v9 / 1v16 detected), `playoffs.json`. Re-running after a match day keeps ranks, `elo_adj`, manual adjustments and locked picks. Works offline with `--wikitext`.
@@ -22,23 +38,13 @@ Tooling release after the PGL Bucharest 2026 test; it also ships the unreleased 
 
 ### Changed
 - Clear error messages: `swiss_sim.py` without numpy; a team without a VRS rank.
-- `liquipedia_event.py` skips qualifier subpages by default (`--with-qualifiers` to include them).
-
-### Fixed
-- `liquipedia_event.py` on real pages (found on PGL Bucharest 2026 before release):
-  - results are read when map scores exist only as halves, with overtimes up to `o4`, as forfeits (`score=FF` / `W`, `walkover=`), or without `finished=` once the maps are done (previously "0 finished");
-  - short team tags in matches (`vit`, `tl`, `mongolz`, `navi`, `dendele`…) are matched to participants, so these teams get rosters; unmatched tags are listed, `--team tag="Full Name"` fixes them by hand;
-  - `playoffs.json` for `Bracket/8`: read from Liquipedia, or seeded from the Swiss standings (1v8, 4v5, 2v7, 3v6) while the bracket is still TBD; `swiss_N.json` now has `final_standings`;
-  - Swiss seeds: Liquipedia lists round 1 in schedule order, not seed order (PGL Masters Bucharest 2026: FUT listed 1st, seeded 7th), so simulated rounds 2–5 and the final-standings tiebreaks used wrong seeds. Seeds now keep the round-1 pairs and sides from Liquipedia and are ordered by VRS rank on the newest snapshot before the event that reproduces the played rounds (both PGL Bucharest 2026 events: rounds 1–5 reproduced); before round 2 the newest snapshot is used and marked unverified. `--no-vrs` / `--vrs-repo PATH`. On PGL Masters Bucharest 2026 this changed the blind Swiss card (3-0: Spirit + Vitality instead of Spirit + FUT);
-  - a missing page gives a clear message instead of `StopIteration`;
-  - the example page in `SKILL.md` / README is `PGL/2026/Masters`.
 
 ### Tested, not adopted
 - Non-Major scale: re-fitted values (0.87–1.02) were not better than 0.9 on held-out 2026 data; no overconfidence found on 746 held-out LAN matches.
 - Separate scale for S-tier events with top-16 teams: no held-out improvement.
 - Extra uncertainty after long breaks (21–60 days): no effect on accuracy.
 
-## 0.3.0 - 2026-10-27 (not released separately; included in 0.4.0)
+## 0.3.0 - 2026-10-27 (not released separately; included in 0.4.1)
 
 Second round of fixes from the PGL Bucharest 2026 test, released together with the 0.2.0 model update below. Each point was backtested; see `references/calibration.md`.
 
@@ -56,7 +62,7 @@ Second round of fixes from the PGL Bucharest 2026 test, released together with t
 - Extra weight on recent matches (higher K, rating decay): worse at Majors or everywhere.
 - Map-score weighting and automatic map pools: no map data to calibrate them yet.
 
-## 0.2.0 - 2026-10-27 (not released separately; included in 0.4.0)
+## 0.2.0 - 2026-10-27 (not released separately; included in 0.4.1)
 
 Model update after a live test on PGL Bucharest 2026. Every change was tested on data the model never saw; ideas that didn't help were dropped (see `references/calibration.md`).
 
@@ -94,6 +100,6 @@ First public beta.
 - Strength model calibrated on them (leave-one-Major-out): `rating = 1700 − 90·ln(VRS rank)`, Bo1 shrink 0.8.
 - Seeding rule verified: the pairing engine reproduces all 45 rounds of all 9 Swiss stages.
 
-[Unreleased]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.4.0...HEAD
-[0.4.0]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.1.0...v0.4.0
+[Unreleased]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/RomkaGP228/pick-em-skill/compare/v0.1.0...v0.4.1
 [0.1.0]: https://github.com/RomkaGP228/pick-em-skill/releases/tag/v0.1.0
